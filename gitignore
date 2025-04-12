@@ -1,0 +1,14 @@
+# .NET artifacts
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Secrets
+*.env
+appsettings.*.json
