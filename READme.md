@@ -24,8 +24,9 @@ Prosjektet er laget som en del av skoleprosjekt ved Gokstad Akademiet.
 
 ## GIT
 
-git clone <din_git_repo_url>
-cd <prosjektmappen>
+git clone https://github.com/EM1RS/cv-portal-2.git
+
+Pass på at du er i riktig mappe (CvApi2)  
 
 ## Kjøre API-et
 1.  dotnet run / dotnet watch
