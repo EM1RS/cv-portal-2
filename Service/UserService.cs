@@ -28,9 +28,9 @@ namespace CvAPI2.Services
             return user;
         }
 
-        public async Task AddUser(User user)
+        public async Task CreateUser(User user)
         {
-            await _userRepository.AddUser(user);  
+            await _userRepository.CreateUser(user);  
         }
 
         public async Task UpdateUser(string id, User user)

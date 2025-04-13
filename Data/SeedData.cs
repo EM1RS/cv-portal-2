@@ -17,7 +17,7 @@ public static class SeedData
             if (!await roleManager.RoleExistsAsync(roleName))
             {
                 var result = await roleManager.CreateAsync(new Role { Name = roleName });
-                Console.WriteLine($"✅ Rolle opprettet: {roleName} (Success: {result.Succeeded})");
+                Console.WriteLine($"Rolle opprettet: {roleName} (Success: {result.Succeeded})");
             }
         }
 
@@ -36,7 +36,6 @@ public static class SeedData
                 Email = adminEmail,
                 FullName = "Admin Bruker",
                 EmailConfirmed = true,
-                RoleId = adminRole.Id
             };
 
             var result = await userManager.CreateAsync(adminUser, "AdminPass2025!");
@@ -45,13 +44,13 @@ public static class SeedData
             if (result.Succeeded)
             {
                 await userManager.AddToRoleAsync(adminUser, "Admin");
-                Console.WriteLine($"🧪 Admin tildelt rolle: Admin");
+                Console.WriteLine($"Admin tildelt rolle: Admin");
             }
         }
 
         // Skriv ut roller admin faktisk har
         var adminRoles = await userManager.GetRolesAsync(adminUser);
-        Console.WriteLine($"🧪 Roller til admin: {string.Join(", ", adminRoles)}");
+        Console.WriteLine($"Roller til admin: {string.Join(", ", adminRoles)}");
 
         // 4. Opprett vanlig bruker
         var userEmail = "user@example.com";
@@ -64,16 +63,15 @@ public static class SeedData
                 Email = userEmail,
                 FullName = "Vanlig Bruker",
                 EmailConfirmed = true,
-                RoleId = userRole.Id
             };
 
             var result = await userManager.CreateAsync(normalUser, "User123!");
-            Console.WriteLine($"👤 Vanlig bruker opprettet: {result.Succeeded}");
+            Console.WriteLine($"Vanlig bruker opprettet: {result.Succeeded}");
 
             if (result.Succeeded)
             {
                 await userManager.AddToRoleAsync(normalUser, "User");
-                Console.WriteLine($"🧪 Bruker tildelt rolle: User");
+                Console.WriteLine($"Bruker tildelt rolle: User");
             }
         }
     }

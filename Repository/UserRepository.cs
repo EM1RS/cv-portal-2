@@ -16,10 +16,6 @@ public class UserRepository : IUserRepository
     {
         return await _context.Users
             .Include(u => u.Cv)
-                .ThenInclude(c => c.WorkExperiences)
-            .Include(u => u.Cv)
-                .ThenInclude(c => c.Educations)
-            .Include(u => u.Role)
             .ToListAsync();
     }
 
@@ -27,9 +23,6 @@ public class UserRepository : IUserRepository
     {
         var user = await _context.Users
             .Include(u => u.Cv)
-                .ThenInclude(c => c.WorkExperiences)
-            .Include(u => u.Cv)
-                .ThenInclude(c => c.Educations)
             .FirstOrDefaultAsync(u => u.Id == id);
 
         if (user == null)
@@ -40,7 +33,7 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task AddUser(User user)
+    public async Task CreateUser(User user)
     {
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
@@ -50,9 +43,6 @@ public class UserRepository : IUserRepository
     {
         var existingUser = await _context.Users
             .Include(u => u.Cv)
-                .ThenInclude(c => c.WorkExperiences)
-            .Include(u => u.Cv)
-                .ThenInclude(c => c.Educations)
             .FirstOrDefaultAsync(u => u.Id == id);
 
         if (existingUser == null)
@@ -65,7 +55,6 @@ public class UserRepository : IUserRepository
         existingUser.PhoneNumber = user.PhoneNumber;
         existingUser.Cv.WorkExperiences = user.Cv.WorkExperiences;
         existingUser.Cv.Educations = user.Cv.Educations;
-        existingUser.RoleId = user.RoleId;
 
         await _context.SaveChangesAsync();
     }

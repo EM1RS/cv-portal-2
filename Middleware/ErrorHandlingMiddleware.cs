@@ -39,7 +39,9 @@ public class ErrorHandlingMiddleware
             {
                 error = "Internal Server Error",
                 message = ex.Message,
-                stackTrace = _env.IsDevelopment() ? ex.StackTrace : null
+                //stackTrace = _env.IsDevelopment() ? ex.StackTrace : null
+                fullException = ex.ToString()
+
             };
 
             await context.Response.WriteAsJsonAsync(response);

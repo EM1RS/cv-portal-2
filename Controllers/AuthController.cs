@@ -10,7 +10,7 @@ using System.Text;
 namespace CvAPI2.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/login")]
     public class AuthController : ControllerBase
     {
         private readonly UserManager<User> userManager;
@@ -22,7 +22,7 @@ namespace CvAPI2.Controllers
             configuration = _configuration;
         }
 
-        [HttpPost("login")]
+        [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var user = await userManager.FindByEmailAsync(request.Email);
@@ -40,14 +40,14 @@ namespace CvAPI2.Controllers
 
             foreach (var role in roles)
             {
-                Console.WriteLine($"🧪 Legger til rolle i token: {role}");
+                Console.WriteLine($"Legger til rolle i token: {role}");
                 claims.Add(new Claim(ClaimTypes.Role, role)); 
             }
             
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            Console.WriteLine("🔐 JWT key used to sign: " + configuration["Jwt:Key"]);
+            Console.WriteLine("JWT key used to sign: " + configuration["Jwt:Key"]);
 
             var token = new JwtSecurityToken(
                 issuer: configuration["Jwt:Issuer"],

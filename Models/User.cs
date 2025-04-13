@@ -5,8 +5,6 @@ namespace CvAPI2.Models
     {
         public required string FullName { get; set; }
         public Cv Cv { get; set; }
-        public string RoleId { get; set; }  // Fremmednøkkel til Role
-        public Role? Role { get; set; }   // Navigasjonsproperty
 
     }
 

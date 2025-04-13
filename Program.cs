@@ -61,7 +61,7 @@ if (string.IsNullOrEmpty(jwtKey))
     throw new Exception("JWT Key is not configured.");
 }
 
-builder.Services.AddAuthorization();
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -84,13 +84,13 @@ builder.Services.AddAuthentication(options =>
     {
         OnAuthenticationFailed = context =>
         {
-            Console.WriteLine("❌ Tokenvalidering feilet: " + context.Exception.Message);
+            //Console.WriteLine("❌ Tokenvalidering feilet: " + context.Exception.Message);
             return Task.CompletedTask;
         },
         OnTokenValidated = context =>
         {
-            Console.WriteLine("✅ Token validert!");
-            Console.WriteLine("🔑 Token brukt: " + context.SecurityToken);
+           // Console.WriteLine("✅ Token validert!");
+            //Console.WriteLine("🔑 Token brukt: " + context.SecurityToken);
             return Task.CompletedTask;
         }
     };
@@ -113,6 +113,11 @@ builder.Services.AddDbContext<CvDbContext>(options =>
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICvService, CvService>();
+builder.Services.AddScoped<ICvRepository, CvRepository>();
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -123,43 +128,31 @@ app.UseSwaggerUI();
 app.UseDeveloperExceptionPage();
 //}
 
-app.Use(async (context, next) =>
-{
-    var authHeader = context.Request.Headers["Authorization"].ToString();
-    Console.WriteLine($"📦 Rå Authorization-header: [{authHeader}]");
-    Console.WriteLine($"📏 Lengde: {authHeader.Length}");
-    foreach (char c in authHeader)
-    {
-        Console.Write($"{(int)c} ");
-    }
-    Console.WriteLine();
-    await next();
-});
 
 
-app.Use(async (context, next) =>
-{
-    try
-    {
-        await next.Invoke();
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine("🔥 Unhandled Exception:");
-        Console.WriteLine(ex.Message);
-        Console.WriteLine(ex.StackTrace);
+// app.Use(async (context, next) =>
+// {
+//     try
+//     {
+//         await next.Invoke();
+//     }
+//     catch (Exception ex)
+//     {
+//         Console.WriteLine("🔥 Unhandled Exception:");
+//         Console.WriteLine(ex.Message);
+//         Console.WriteLine(ex.StackTrace);
 
-        context.Response.StatusCode = 500;
-        context.Response.ContentType = "application/json";
+//         context.Response.StatusCode = 500;
+//         context.Response.ContentType = "application/json";
 
-        await context.Response.WriteAsJsonAsync(new
-        {
-            error = ex.Message,
-            details = ex.InnerException?.Message,
-            stackTrace = ex.StackTrace
-        });
-    }
-});
+//         await context.Response.WriteAsJsonAsync(new
+//         {
+//             error = ex.Message,
+//             //fullDetails = ex.ToString()
+//             //stackTrace = ex.StackTrace
+//         });
+//     }
+// });
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
@@ -171,11 +164,9 @@ app.UseRouting();
 app.Use(async (context, next) =>
 {
     var authHeader = context.Request.Headers["Authorization"].ToString();
-    Console.WriteLine($"🔍 Authorization Header: {authHeader}");
+    //Console.WriteLine($"🔍 Authorization Header: {authHeader}");
     await next();
 });
-
-
 
 
 app.UseAuthentication();
@@ -189,6 +180,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     await SeedData.InitializeAsync(services);
 }
+
 
 app.Run();
 

@@ -5,10 +5,10 @@ namespace CvAPI2.Models
         public int Id { get; set; }
         public string? School { get; set; }
         public string? Degree { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
 
-        public int CvId { get; set; }           // Fremmednøkkel
-        public required Cv Cv { get; set; }     // Navigasjonsproperty
+        public string? CvId { get; set; }           // Fremmednøkkel
+        public Cv? Cv { get; set; }     // Navigasjonsproperty
     }
 }

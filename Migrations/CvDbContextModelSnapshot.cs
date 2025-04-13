@@ -18,15 +18,120 @@ namespace CvApi2.Migrations
                 .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("CvAPI2.Models.Cv", b =>
+            modelBuilder.Entity("Course", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("CvId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Provider")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CvId");
+
+                    b.ToTable("Course");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.Award", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CvId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Organization")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CvId");
+
+                    b.ToTable("Award");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.Certification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CvId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("IssuedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CvId");
+
+                    b.ToTable("Certification");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.CompetenceOverview", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CvId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("skill_level")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("skill_name")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("CvId");
+
+                    b.ToTable("CompetenceOverview");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.Cv", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
                     b.Property<string>("Personalia")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<int>("PhoneNumber")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -46,19 +151,19 @@ namespace CvApi2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("CvId")
-                        .HasColumnType("int");
+                    b.Property<string>("CvId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Degree")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("EndDate")
+                    b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("School")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("StartDate")
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
@@ -66,6 +171,91 @@ namespace CvApi2.Migrations
                     b.HasIndex("CvId");
 
                     b.ToTable("Educations");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.Language", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CvId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Proficiency")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CvId");
+
+                    b.ToTable("Language");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.Position", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CvId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Organization")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CvId");
+
+                    b.ToTable("Position");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.ProjectExperience", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CvId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ProjectName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CvId");
+
+                    b.ToTable("ProjectExperience");
                 });
 
             modelBuilder.Entity("CvAPI2.Models.Role", b =>
@@ -92,6 +282,28 @@ namespace CvApi2.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.RoleOverview", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CvId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CvId");
+
+                    b.ToTable("RoleOverview");
                 });
 
             modelBuilder.Entity("CvAPI2.Models.User", b =>
@@ -141,7 +353,6 @@ namespace CvApi2.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("RoleId")
-                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("SecurityStamp")
@@ -178,13 +389,13 @@ namespace CvApi2.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("CvId")
-                        .HasColumnType("int");
+                    b.Property<string>("CvId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Role")
+                    b.Property<string>("Position")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -300,6 +511,46 @@ namespace CvApi2.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Course", b =>
+                {
+                    b.HasOne("CvAPI2.Models.Cv", "Cv")
+                        .WithMany("Courses")
+                        .HasForeignKey("CvId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Cv");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.Award", b =>
+                {
+                    b.HasOne("CvAPI2.Models.Cv", "Cv")
+                        .WithMany("Awards")
+                        .HasForeignKey("CvId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Cv");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.Certification", b =>
+                {
+                    b.HasOne("CvAPI2.Models.Cv", "Cv")
+                        .WithMany("Certifications")
+                        .HasForeignKey("CvId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Cv");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.CompetenceOverview", b =>
+                {
+                    b.HasOne("CvAPI2.Models.Cv", "Cv")
+                        .WithMany("CompetenceOverviews")
+                        .HasForeignKey("CvId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Cv");
+                });
+
             modelBuilder.Entity("CvAPI2.Models.Cv", b =>
                 {
                     b.HasOne("CvAPI2.Models.User", "User")
@@ -316,21 +567,56 @@ namespace CvApi2.Migrations
                     b.HasOne("CvAPI2.Models.Cv", "Cv")
                         .WithMany("Educations")
                         .HasForeignKey("CvId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Cv");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.Language", b =>
+                {
+                    b.HasOne("CvAPI2.Models.Cv", "Cv")
+                        .WithMany("Languages")
+                        .HasForeignKey("CvId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Cv");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.Position", b =>
+                {
+                    b.HasOne("CvAPI2.Models.Cv", "Cv")
+                        .WithMany("Positions")
+                        .HasForeignKey("CvId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Cv");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.ProjectExperience", b =>
+                {
+                    b.HasOne("CvAPI2.Models.Cv", "Cv")
+                        .WithMany("ProjectExperiences")
+                        .HasForeignKey("CvId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Cv");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.RoleOverview", b =>
+                {
+                    b.HasOne("CvAPI2.Models.Cv", "Cv")
+                        .WithMany("RoleOverviews")
+                        .HasForeignKey("CvId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Cv");
                 });
 
             modelBuilder.Entity("CvAPI2.Models.User", b =>
                 {
-                    b.HasOne("CvAPI2.Models.Role", "Role")
+                    b.HasOne("CvAPI2.Models.Role", null)
                         .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
+                        .HasForeignKey("RoleId");
                 });
 
             modelBuilder.Entity("CvAPI2.Models.WorkExperience", b =>
@@ -338,8 +624,7 @@ namespace CvApi2.Migrations
                     b.HasOne("CvAPI2.Models.Cv", "Cv")
                         .WithMany("WorkExperiences")
                         .HasForeignKey("CvId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Cv");
                 });
@@ -397,7 +682,23 @@ namespace CvApi2.Migrations
 
             modelBuilder.Entity("CvAPI2.Models.Cv", b =>
                 {
+                    b.Navigation("Awards");
+
+                    b.Navigation("Certifications");
+
+                    b.Navigation("CompetenceOverviews");
+
+                    b.Navigation("Courses");
+
                     b.Navigation("Educations");
+
+                    b.Navigation("Languages");
+
+                    b.Navigation("Positions");
+
+                    b.Navigation("ProjectExperiences");
+
+                    b.Navigation("RoleOverviews");
 
                     b.Navigation("WorkExperiences");
                 });
