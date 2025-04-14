@@ -9,4 +9,5 @@ public interface ICvService
     Task AddCv(Cv cv);
     Task UpdateCv(Cv cv);
     Task DeleteCv(string id);
+    Task<List<Cv>> SearchCvsByKeywords(List<string> keywords);
 }

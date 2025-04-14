@@ -1,6 +1,7 @@
 using CvAPI2.Models;
 using Microsoft.AspNetCore.Mvc;
 
+
 public class CvService : ICvService
 
 {
@@ -27,5 +28,11 @@ public class CvService : ICvService
     public Task UpdateCv(Cv cv) => _CvRepository.UpdateCv(cv);
 
     public async Task DeleteCv(string id) => await _CvRepository.DeleteCv(id);
+
+
+    public async Task<List<Cv>> SearchCvsByKeywords(List<string> keywords)
+    {
+        return await _CvRepository.SearchCvsByKeywords(keywords);
+    }
 
 }

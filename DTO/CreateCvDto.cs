@@ -9,5 +9,5 @@ public class CreateCvDto {
     public List<LanguageDto>? Languages { get; set; }
     public List<PositionDto>? Positions { get; set; }
     public List<ProjectExperienceDto>? ProjectExperiences { get; set; }
-    public List<RoleOverviewDto>? RolesOverviews { get; set; }
+    public List<RoleOverviewDto>? RoleOverviews { get; set; }
 }

@@ -52,5 +52,7 @@ namespace CvAPI2.Services
             }
             await _userRepository.DeleteUser(id);  
         }
+
+        
     }
 }

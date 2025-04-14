@@ -102,7 +102,7 @@ public class CvController : ControllerBase
                     EndDate = p.EndDate
                 }).ToList(),
 
-                RolesOverviews = cv.RoleOverviews?.Select(r => new RoleOverviewDto
+                RoleOverviews = cv.RoleOverviews?.Select(r => new RoleOverviewDto
                 {
                     Role = r.Role,
                     Description = r.Description
@@ -198,7 +198,7 @@ public class CvController : ControllerBase
                     EndDate = p.EndDate
                 }).ToList(),
 
-                RolesOverviews = cv.RoleOverviews?.Select(r => new RoleOverviewDto
+                RoleOverviews = cv.RoleOverviews?.Select(r => new RoleOverviewDto
                 {
                     Role = r.Role,
                     Description = r.Description
@@ -329,7 +329,7 @@ public class CvController : ControllerBase
                     EndDate = p.EndDate
                 }).ToList() ?? new List<ProjectExperience>(),
 
-                RoleOverviews = dtoUpdate.RolesOverviews?.Select(r => new RoleOverview
+                RoleOverviews = dtoUpdate.RoleOverviews?.Select(r => new RoleOverview
                 {
                     Role = r.Role,
                     Description = r.Description
@@ -447,7 +447,7 @@ public class CvController : ControllerBase
                 CvId = existingCv.Id
             }).ToList() ?? new List<ProjectExperience>();
 
-            existingCv.RoleOverviews = dtoUpdateCv.RolesOverviews?.Select(r => new RoleOverview
+            existingCv.RoleOverviews = dtoUpdateCv.RoleOverviews?.Select(r => new RoleOverview
             {
                 Role = r.Role,
                 Description = r.Description,
@@ -591,7 +591,7 @@ public class CvController : ControllerBase
                     EndDate = p.EndDate
                 }).ToList() ?? new List<ProjectExperience>(),
 
-                RoleOverviews = dto.RolesOverviews?.Select(r => new RoleOverview
+                RoleOverviews = dto.RoleOverviews?.Select(r => new RoleOverview
                 {
                     Role = r.Role,
                     Description = r.Description
@@ -606,6 +606,127 @@ public class CvController : ControllerBase
         {
             _logger.LogError(ex, "Feil ved opprettelse av CV for bruker {UserId}", userId);
             return StatusCode(500, new ApiError { Message = "Uventet feil oppstod.", Details = ex.Message });
+        }
+    }
+    [Authorize(Roles = "Admin")]
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchCvs([FromQuery] string keywords)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(keywords))
+                return BadRequest("Søkeord må oppgis!");
+
+            var terms = keywords
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(k => k.Trim().ToLower())
+                .ToList();
+
+            _logger.LogInformation("Søker etter Cv-er med nøkkelord: {Keywords}", string.Join(", ", terms));
+
+            var results = await _cvService.SearchCvsByKeywords(terms);
+                    if (results == null || !results.Any())
+                    {
+                        _logger.LogWarning("Ingen resultater funnet for nøkkelord: {Keywords}", string.Join(", ", terms));
+                        return NotFound(new ApiError
+                        {
+                            Message = "Ingen CV-er matchet søket.",
+                            Details = "Prøv å søke med andre eller flere nøkkelord."
+                        });
+                    }
+
+            var dtoResults = results.Select(cv => new CvDto
+            {
+                Id = cv.Id,
+                Personalia = cv.Personalia,
+                UserId = cv.UserId,
+                FullName = cv.User?.FullName ?? "",
+                PhoneNumber = cv.User?.PhoneNumber,
+
+                WorkExperiences = cv.WorkExperiences?.Select(w => new WorkExperienceDto
+                {
+                    Company = w.Company,
+                    Position = w.Position,
+                    From = w.StartDate,
+                    To = w.EndDate
+                }).ToList(),
+
+                Educations = cv.Educations?.Select(e => new EducationDto
+                {
+                    School = e.School,
+                    Degree = e.Degree,
+                    StartYear = e.StartDate,
+                    EndYear = e.EndDate
+                }).ToList(),
+
+                Awards = cv.Awards?.Select(a => new AwardDto
+                {
+                    Name = a.Name,
+                    Description = a.Organization,
+                    Year = a.Year
+                }).ToList(),
+
+                Certifications = cv.Certifications?.Select(c => new CertificationDto
+                {
+                    Name = c.Name,
+                    IssuedBy = c.IssuedBy,
+                    Date = c.Date
+                }).ToList(),
+
+                Courses = cv.Courses?.Select(c => new CourseDto
+                {
+                    Name = c.Name,
+                    Provider = c.Provider,
+                    CompletionDate = c.Date
+                }).ToList(),
+
+                CompetenceOverviews = cv.CompetenceOverviews?.Select(c => new CompetenceOverviewDto
+                {
+                    Area = c.skill_name,
+                    Level = c.skill_level
+                }).ToList(),
+
+                Languages = cv.Languages?.Select(l => new LanguageDto
+                {
+                    Name = l.Name,
+                    Proficiency = l.Proficiency
+                }).ToList(),
+
+                Positions = cv.Positions?.Select(p => new PositionDto
+                {
+                    Title = p.Name,
+                    StartDate = p.StartDate,
+                    EndDate = p.EndDate
+                }).ToList(),
+
+                ProjectExperiences = cv.ProjectExperiences?.Select(p => new ProjectExperienceDto
+                {
+                    ProjectName = p.ProjectName,
+                    Description = p.Description,
+                    Role = p.Role,
+                    StartDate = p.StartDate,
+                    EndDate = p.EndDate
+                }).ToList(),
+
+                RoleOverviews = cv.RoleOverviews?.Select(r => new RoleOverviewDto
+                {
+                    Role = r.Role,
+                    Description = r.Description
+                }).ToList()
+
+            }).ToList();
+                
+            _logger.LogInformation("Fant {Count} Cv-er som er matchet søket", dtoResults.Count);
+            return Ok(dtoResults);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Feil ved søk etter Cv-er med nøkkelord: {Keywords}", keywords);
+            return StatusCode(500, new ApiError
+            {
+                Message = "Uventet feil oppstod under søk!",
+                Details = ex.Message
+            });
         }
     }
 

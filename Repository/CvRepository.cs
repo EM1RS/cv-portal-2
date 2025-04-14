@@ -77,4 +77,45 @@ public class CvRepository : ICvRepository
             await _context.SaveChangesAsync();
         }
     }
+    public async Task<List<Cv>> SearchCvsByKeywords(List<string> keywords)
+    {
+        if (keywords == null || keywords.Count == 0)
+            return new List<Cv>();
+        var loweredKeywords = keywords.Select(k => k.ToLower()).ToList();
+
+        var cvs = await _context.Cvs
+            .Include(c => c.User)
+            .Include(c => c.WorkExperiences)
+            .Include(c => c.Educations)
+            .Include(c => c.CompetenceOverviews)
+            .Include(c => c.Languages)
+            .Include(c => c.Positions)
+            .Include(c => c.ProjectExperiences)
+            .Include(c => c.Certifications)
+            .Include(c => c.Courses)
+            .Include(c => c.Awards)
+            .Include(c => c.RoleOverviews)
+            .AsNoTracking()
+            .ToListAsync();
+
+    return cvs
+            .Where(cv =>
+                keywords.Any(k =>
+                    (cv.Personalia?.ToLower().Contains(k) ?? false) ||
+                    (cv.User?.FullName?.ToLower().Contains(k) ?? false) ||
+                    (cv.Educations?.Any(e => e.School.ToLower().Contains(k) || e.Degree.ToLower().Contains(k)) ?? false) ||
+                    (cv.WorkExperiences?.Any(w => w.Company.ToLower().Contains(k) || w.Position.ToLower().Contains(k)) ?? false) ||
+                    (cv.Certifications?.Any(c => c.Name.ToLower().Contains(k) || c.IssuedBy.ToLower().Contains(k)) ?? false) ||
+                    (cv.Courses?.Any(c => c.Name.ToLower().Contains(k) || c.Provider.ToLower().Contains(k)) ?? false) ||
+                    (cv.CompetenceOverviews?.Any(c => c.skill_name.ToLower().Contains(k) || c.skill_level.ToLower().Contains(k)) ?? false) ||
+                    (cv.Languages?.Any(l => l.Name.ToLower().Contains(k) || l.Proficiency.ToLower().Contains(k)) ?? false) ||
+                    (cv.Positions?.Any(p => p.Name.ToLower().Contains(k)) ?? false) ||
+                    (cv.ProjectExperiences?.Any(p => p.ProjectName.ToLower().Contains(k) || p.Description.ToLower().Contains(k) || p.Role.ToLower().Contains(k)) ?? false) ||
+                    (cv.RoleOverviews?.Any(r => r.Role.ToLower().Contains(k) || r.Description.ToLower().Contains(k)) ?? false) ||
+                    (cv.Awards?.Any(a => a.Name.ToLower().Contains(k) || a.Organization.ToLower().Contains(k)) ?? false)
+                )
+            )
+            .ToList();
+                    
+    }
 }

@@ -7,4 +7,5 @@ public interface IUserRepository
         Task CreateUser(User user);
         Task UpdateUser(string id, User user);
         Task DeleteUser(string id);
+
 }

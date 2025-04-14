@@ -6,7 +6,7 @@ public class CvDto
     public string Id { get; set; }
     [Required]
     public string Personalia { get; set; }
-    public int PhoneNumber { get; set; }
+    public string PhoneNumber { get; set; }
     public string UserId { get; set; }
     public string FullName { get; set; }  
 
@@ -19,5 +19,5 @@ public class CvDto
     public List<LanguageDto>? Languages { get; set; }
     public List<PositionDto>? Positions { get; set; }
     public List<ProjectExperienceDto>? ProjectExperiences { get; set; }
-    public List<RoleOverviewDto>? RolesOverviews { get; set; }
+    public List<RoleOverviewDto>? RoleOverviews { get; set; }
 }
