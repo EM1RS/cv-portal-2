@@ -9,7 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.UseUrls("http://localhost:5005");
+//builder.WebHost.UseUrls("http://localhost:5005");
+builder.WebHost.UseUrls("http://+:80");
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -104,10 +105,15 @@ builder.Services.AddCors(options =>
                         .AllowAnyMethod()
                         .AllowAnyHeader());
 });
+builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddDbContext<CvDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), 
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
+{
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        new MySqlServerVersion(new Version(8, 0, 42))
+    );
+});
         
 
 
@@ -128,38 +134,16 @@ app.UseSwaggerUI();
 app.UseDeveloperExceptionPage();
 //}
 
-
-
-// app.Use(async (context, next) =>
-// {
-//     try
-//     {
-//         await next.Invoke();
-//     }
-//     catch (Exception ex)
-//     {
-//         Console.WriteLine("🔥 Unhandled Exception:");
-//         Console.WriteLine(ex.Message);
-//         Console.WriteLine(ex.StackTrace);
-
-//         context.Response.StatusCode = 500;
-//         context.Response.ContentType = "application/json";
-
-//         await context.Response.WriteAsJsonAsync(new
-//         {
-//             error = ex.Message,
-//             //fullDetails = ex.ToString()
-//             //stackTrace = ex.StackTrace
-//         });
-//     }
-// });
-
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
+app.UseRouting();
 app.UseCors("AllowAll");
 //app.UseHttpsRedirection();
-
-app.UseRouting();
+app.Use(async (context, next) =>
+{
+    Console.WriteLine($"➡️ {context.Request.Method} {context.Request.Path}");
+    await next();
+});
 
 app.Use(async (context, next) =>
 {
@@ -178,8 +162,19 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    await SeedData.InitializeAsync(services);
+    try
+    {
+        var context = services.GetRequiredService<CvDbContext>();
+        await context.Database.MigrateAsync(); 
+        await SeedData.InitializeAsync(services); 
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Feil ved migrering/seed:");
+        Console.WriteLine(ex);
+    }
 }
+
 
 
 app.Run();

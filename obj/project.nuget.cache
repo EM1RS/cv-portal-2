@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "kA3lVuHWuQ4=",
+  "dgSpecHash": "JPZROhyURdc=",
   "success": true,
-  "projectFilePath": "C:\\Users\\eso\\OneDrive - TRIMIT\\Dokumenter\\ES\\Gokstad Akademiet\\Prosjekt - Emne 9\\CvApi2\\CvApi2.csproj",
+  "projectFilePath": "C:\\Users\\eso\\OneDrive - TRIMIT\\Dokumenter\\ES\\Gokstad Akademiet\\Prosjekt - Emne 9\\CV_PORTAL\\CvApi2\\CvApi2.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\eso\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\eso\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.0\\microsoft.aspnetcore.authentication.jwtbearer.8.0.0.nupkg.sha512",
