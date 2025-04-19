@@ -24,6 +24,10 @@ namespace CvApi2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("CourseDescription")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("CvId")
                         .HasColumnType("varchar(255)");
 
@@ -42,7 +46,7 @@ namespace CvApi2.Migrations
 
                     b.HasIndex("CvId");
 
-                    b.ToTable("Course");
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("CvAPI2.Models.Award", b =>
@@ -50,6 +54,10 @@ namespace CvApi2.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<string>("AwardDescription")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("CvId")
                         .HasColumnType("varchar(255)");
@@ -69,7 +77,7 @@ namespace CvApi2.Migrations
 
                     b.HasIndex("CvId");
 
-                    b.ToTable("Award");
+                    b.ToTable("Awards");
                 });
 
             modelBuilder.Entity("CvAPI2.Models.Certification", b =>
@@ -77,6 +85,10 @@ namespace CvApi2.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<string>("CertificationDescription")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("CvId")
                         .HasColumnType("varchar(255)");
@@ -96,7 +108,7 @@ namespace CvApi2.Migrations
 
                     b.HasIndex("CvId");
 
-                    b.ToTable("Certification");
+                    b.ToTable("Certifications");
                 });
 
             modelBuilder.Entity("CvAPI2.Models.CompetenceOverview", b =>
@@ -118,13 +130,16 @@ namespace CvApi2.Migrations
 
                     b.HasIndex("CvId");
 
-                    b.ToTable("CompetenceOverview");
+                    b.ToTable("CompetenceOverviews");
                 });
 
             modelBuilder.Entity("CvAPI2.Models.Cv", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Personalia")
                         .IsRequired()
@@ -155,6 +170,10 @@ namespace CvApi2.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("Degree")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("EducationDescription")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("EndDate")
@@ -194,37 +213,7 @@ namespace CvApi2.Migrations
 
                     b.HasIndex("CvId");
 
-                    b.ToTable("Language");
-                });
-
-            modelBuilder.Entity("CvAPI2.Models.Position", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("CvId")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Organization")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CvId");
-
-                    b.ToTable("Position");
+                    b.ToTable("Languages");
                 });
 
             modelBuilder.Entity("CvAPI2.Models.ProjectExperience", b =>
@@ -233,14 +222,17 @@ namespace CvApi2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("CvId")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ProjectExperienceDescription")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ProjectName")
                         .HasColumnType("longtext");
@@ -255,7 +247,7 @@ namespace CvApi2.Migrations
 
                     b.HasIndex("CvId");
 
-                    b.ToTable("ProjectExperience");
+                    b.ToTable("ProjectExperiences");
                 });
 
             modelBuilder.Entity("CvAPI2.Models.Role", b =>
@@ -293,17 +285,32 @@ namespace CvApi2.Migrations
                     b.Property<string>("CvId")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Role")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Role")
+                    b.Property<string>("RoleDescription")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CvId");
 
-                    b.ToTable("RoleOverview");
+                    b.ToTable("RoleOverviews");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.Tag.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("CvAPI2.Models.User", b =>
@@ -385,7 +392,7 @@ namespace CvApi2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Company")
+                    b.Property<string>("CompanyName")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -401,6 +408,10 @@ namespace CvApi2.Migrations
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("WorkExperienceDescription")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -511,6 +522,36 @@ namespace CvApi2.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ProjectExperienceTag", b =>
+                {
+                    b.Property<int>("ProjectExperienceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProjectExperienceId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("ProjectExperienceTags");
+                });
+
+            modelBuilder.Entity("WorkExperienceTag", b =>
+                {
+                    b.Property<int>("WorkExperienceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("WorkExperienceId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("WorkExperienceTags");
+                });
+
             modelBuilder.Entity("Course", b =>
                 {
                     b.HasOne("CvAPI2.Models.Cv", "Cv")
@@ -576,16 +617,6 @@ namespace CvApi2.Migrations
                 {
                     b.HasOne("CvAPI2.Models.Cv", "Cv")
                         .WithMany("Languages")
-                        .HasForeignKey("CvId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Cv");
-                });
-
-            modelBuilder.Entity("CvAPI2.Models.Position", b =>
-                {
-                    b.HasOne("CvAPI2.Models.Cv", "Cv")
-                        .WithMany("Positions")
                         .HasForeignKey("CvId")
                         .OnDelete(DeleteBehavior.Cascade);
 
@@ -680,6 +711,44 @@ namespace CvApi2.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProjectExperienceTag", b =>
+                {
+                    b.HasOne("CvAPI2.Models.ProjectExperience", "ProjectExperience")
+                        .WithMany("Tags")
+                        .HasForeignKey("ProjectExperienceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CvAPI2.Models.Tag.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProjectExperience");
+
+                    b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("WorkExperienceTag", b =>
+                {
+                    b.HasOne("CvAPI2.Models.Tag.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CvAPI2.Models.WorkExperience", "WorkExperience")
+                        .WithMany("Tags")
+                        .HasForeignKey("WorkExperienceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tag");
+
+                    b.Navigation("WorkExperience");
+                });
+
             modelBuilder.Entity("CvAPI2.Models.Cv", b =>
                 {
                     b.Navigation("Awards");
@@ -694,13 +763,16 @@ namespace CvApi2.Migrations
 
                     b.Navigation("Languages");
 
-                    b.Navigation("Positions");
-
                     b.Navigation("ProjectExperiences");
 
                     b.Navigation("RoleOverviews");
 
                     b.Navigation("WorkExperiences");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.ProjectExperience", b =>
+                {
+                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("CvAPI2.Models.Role", b =>
@@ -712,6 +784,11 @@ namespace CvApi2.Migrations
                 {
                     b.Navigation("Cv")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.WorkExperience", b =>
+                {
+                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }

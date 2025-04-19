@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "JPZROhyURdc=",
+  "dgSpecHash": "4nh0njd8Zus=",
   "success": true,
   "projectFilePath": "C:\\Users\\eso\\OneDrive - TRIMIT\\Dokumenter\\ES\\Gokstad Akademiet\\Prosjekt - Emne 9\\CV_PORTAL\\CvApi2\\CvApi2.csproj",
   "expectedPackageFiles": [
@@ -44,6 +44,7 @@
     "C:\\Users\\eso\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\eso\\.nuget\\packages\\mysqlconnector\\2.3.5\\mysqlconnector.2.3.5.nupkg.sha512",
     "C:\\Users\\eso\\.nuget\\packages\\pomelo.entityframeworkcore.mysql\\8.0.0\\pomelo.entityframeworkcore.mysql.8.0.0.nupkg.sha512",
+    "C:\\Users\\eso\\.nuget\\packages\\questpdf\\2025.4.0\\questpdf.2025.4.0.nupkg.sha512",
     "C:\\Users\\eso\\.nuget\\packages\\scalar.aspnetcore\\2.1.10\\scalar.aspnetcore.2.1.10.nupkg.sha512",
     "C:\\Users\\eso\\.nuget\\packages\\swashbuckle.aspnetcore\\6.6.2\\swashbuckle.aspnetcore.6.6.2.nupkg.sha512",
     "C:\\Users\\eso\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.6.2\\swashbuckle.aspnetcore.swagger.6.6.2.nupkg.sha512",

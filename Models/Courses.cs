@@ -4,6 +4,7 @@ public class Course
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
+    public string CourseDescription { get; set; }
     public string Provider { get; set; } = string.Empty;
     public DateTime Date { get; set; }
 

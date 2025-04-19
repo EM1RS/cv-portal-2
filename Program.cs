@@ -7,10 +7,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 //builder.WebHost.UseUrls("http://localhost:5005");
-builder.WebHost.UseUrls("http://+:80");
+//builder.WebHost.UseUrls("http://+:80");
+
+builder.WebHost.UseUrls("http://0.0.0.0:80");
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -98,6 +101,8 @@ builder.Services.AddAuthentication(options =>
 
 });
 
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -121,6 +126,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICvService, CvService>();
 builder.Services.AddScoped<ICvRepository, CvRepository>();
+
 
 
 
@@ -176,6 +182,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 
+QuestPDF.Settings.License = LicenseType.Community;
 
 app.Run();
 

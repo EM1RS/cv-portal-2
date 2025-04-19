@@ -1,4 +1,5 @@
 using CvAPI2.Models;
+using CvAPI2.Models.Tag;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -24,6 +25,7 @@ public class CvService : ICvService
     }
 
     public Task AddCv(Cv cv) => _CvRepository.AddCv(cv);
+    
 
     public Task UpdateCv(Cv cv) => _CvRepository.UpdateCv(cv);
 
@@ -34,5 +36,11 @@ public class CvService : ICvService
     {
         return await _CvRepository.SearchCvsByKeywords(keywords);
     }
+
+    public async Task<Tag> GetOrCreateTagAsync(string value)
+{
+    return await _CvRepository.GetOrCreateTagAsync(value);
+}
+
 
 }

@@ -1,4 +1,5 @@
 using CvAPI2.Models;
+using CvAPI2.Models.Tag;
 using Microsoft.EntityFrameworkCore;
 
 public class CvRepository : ICvRepository
@@ -13,30 +14,28 @@ public class CvRepository : ICvRepository
     public async Task<IEnumerable<Cv>> GetAllCvs() =>
         await _context.Cvs
             .Include(c => c.User)
-            .Include(c => c.WorkExperiences)
+            .Include(c => c.WorkExperiences).ThenInclude(w => w.Tags).ThenInclude(t => t.Tag)
             .Include(c => c.Educations)
             .Include(c => c.Awards)
             .Include(c => c.Courses)
             .Include(c => c.Certifications)
             .Include(c => c.CompetenceOverviews)
             .Include(c => c.RoleOverviews)
-            .Include(c => c.ProjectExperiences)
-            .Include(c => c.Positions)
+            .Include(c => c.ProjectExperiences).ThenInclude(p => p.Tags).ThenInclude(t => t.Tag)
             .Include(c => c.Languages)
             .ToListAsync();
 
     public async Task<Cv?> GetCvById(string id) =>
         await _context.Cvs
             .Include(c => c.User)
-            .Include(c => c.WorkExperiences)
+            .Include(c => c.WorkExperiences).ThenInclude(w => w.Tags).ThenInclude(t => t.Tag)
             .Include(c => c.Educations)
             .Include(c => c.Awards)
             .Include(c => c.Courses)
             .Include(c => c.Certifications)
             .Include(c => c.CompetenceOverviews)
             .Include(c => c.RoleOverviews)
-            .Include(c => c.ProjectExperiences)
-            .Include(c => c.Positions)
+            .Include(c => c.ProjectExperiences).ThenInclude(p => p.Tags).ThenInclude(t => t.Tag)
             .Include(c => c.Languages)
             .FirstOrDefaultAsync(c => c.Id == id);
 
@@ -44,15 +43,14 @@ public class CvRepository : ICvRepository
         await _context.Cvs
             .Where(cv => cv.UserId == userId)
             .Include(c => c.User)
-            .Include(c => c.WorkExperiences)
+            .Include(c => c.WorkExperiences).ThenInclude(w => w.Tags).ThenInclude(t => t.Tag)
             .Include(c => c.Educations)
             .Include(c => c.Awards)
             .Include(c => c.Courses)
             .Include(c => c.Certifications)
             .Include(c => c.CompetenceOverviews)
             .Include(c => c.RoleOverviews)
-            .Include(c => c.ProjectExperiences)
-            .Include(c => c.Positions)
+            .Include(c => c.ProjectExperiences).ThenInclude(p => p.Tags).ThenInclude(t => t.Tag)
             .Include(c => c.Languages)
             .ToListAsync();
 
@@ -85,12 +83,11 @@ public class CvRepository : ICvRepository
 
         var cvs = await _context.Cvs
             .Include(c => c.User)
-            .Include(c => c.WorkExperiences)
+            .Include(c => c.WorkExperiences).ThenInclude(w => w.Tags).ThenInclude(t => t.Tag)
             .Include(c => c.Educations)
             .Include(c => c.CompetenceOverviews)
             .Include(c => c.Languages)
-            .Include(c => c.Positions)
-            .Include(c => c.ProjectExperiences)
+            .Include(c => c.ProjectExperiences).ThenInclude(p => p.Tags).ThenInclude(t => t.Tag)
             .Include(c => c.Certifications)
             .Include(c => c.Courses)
             .Include(c => c.Awards)
@@ -98,24 +95,48 @@ public class CvRepository : ICvRepository
             .AsNoTracking()
             .ToListAsync();
 
-    return cvs
+        return cvs
             .Where(cv =>
                 keywords.Any(k =>
                     (cv.Personalia?.ToLower().Contains(k) ?? false) ||
                     (cv.User?.FullName?.ToLower().Contains(k) ?? false) ||
                     (cv.Educations?.Any(e => e.School.ToLower().Contains(k) || e.Degree.ToLower().Contains(k)) ?? false) ||
-                    (cv.WorkExperiences?.Any(w => w.Company.ToLower().Contains(k) || w.Position.ToLower().Contains(k)) ?? false) ||
+                    (cv.WorkExperiences?.Any(w =>
+                        w.CompanyName.ToLower().Contains(k) ||
+                        w.Position.ToLower().Contains(k) ||
+                        (w.Tags?.Any(t => t.Tag.Value.ToLower().Contains(k)) ?? false)
+                    ) ?? false) ||
                     (cv.Certifications?.Any(c => c.Name.ToLower().Contains(k) || c.IssuedBy.ToLower().Contains(k)) ?? false) ||
                     (cv.Courses?.Any(c => c.Name.ToLower().Contains(k) || c.Provider.ToLower().Contains(k)) ?? false) ||
                     (cv.CompetenceOverviews?.Any(c => c.skill_name.ToLower().Contains(k) || c.skill_level.ToLower().Contains(k)) ?? false) ||
                     (cv.Languages?.Any(l => l.Name.ToLower().Contains(k) || l.Proficiency.ToLower().Contains(k)) ?? false) ||
-                    (cv.Positions?.Any(p => p.Name.ToLower().Contains(k)) ?? false) ||
-                    (cv.ProjectExperiences?.Any(p => p.ProjectName.ToLower().Contains(k) || p.Description.ToLower().Contains(k) || p.Role.ToLower().Contains(k)) ?? false) ||
-                    (cv.RoleOverviews?.Any(r => r.Role.ToLower().Contains(k) || r.Description.ToLower().Contains(k)) ?? false) ||
+                    (cv.ProjectExperiences?.Any(p =>
+                        p.ProjectName.ToLower().Contains(k) ||
+                        p.CompanyName.ToLower().Contains(k) ||
+                        p.ProjectExperienceDescription.ToLower().Contains(k) ||
+                        p.Role.ToLower().Contains(k) ||
+                        (p.Tags?.Any(t => t.Tag.Value.ToLower().Contains(k)) ?? false)
+                    ) ?? false) ||
+                    (cv.RoleOverviews?.Any(r => r.Role.ToLower().Contains(k) || r.RoleDescription.ToLower().Contains(k)) ?? false) ||
                     (cv.Awards?.Any(a => a.Name.ToLower().Contains(k) || a.Organization.ToLower().Contains(k)) ?? false)
                 )
             )
             .ToList();
+
                     
     }
+
+    public async Task<Tag> GetOrCreateTagAsync(string value)
+    {
+        var tag = await _context.Tags.FirstOrDefaultAsync(t => t.Value == value);
+        if (tag == null)
+        {
+            tag = new Tag { Value = value };
+            _context.Tags.Add(tag);
+            await _context.SaveChangesAsync();
+        }
+
+        return tag;
+    }
+
 }

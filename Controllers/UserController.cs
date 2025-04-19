@@ -42,7 +42,6 @@ namespace CvAPI2.Controllers
                         FullName = user.FullName,
                         Role = role,
                         UserId = user.Id,
-                        PhoneNumber = user.PhoneNumber,
                         CvId = user.Cv?.Id
                     });
                 }
@@ -75,7 +74,6 @@ namespace CvAPI2.Controllers
                     FullName = user.FullName,
                     Email = user.Email,
                     Role = role,
-                    PhoneNumber = user.PhoneNumber,
                     CvId = user.Cv?.Id
                 };
 
@@ -112,8 +110,7 @@ namespace CvAPI2.Controllers
                 {
                     FullName = newUser.FullName,
                     Email = newUser.Email,
-                    UserName = newUser.Email,
-                    PhoneNumber = newUser.PhoneNumber
+                    UserName = newUser.Email
                 };
 
                 var result = await _userManager.CreateAsync(user, newUser.Password);
@@ -155,7 +152,6 @@ namespace CvAPI2.Controllers
                 user.FullName = updatedUser.FullName;
                 user.Email = updatedUser.Email;
                 user.UserName = updatedUser.Email;
-                user.PhoneNumber = updatedUser.PhoneNumber;
 
                 var result = await _userManager.UpdateAsync(user);
                 if (!result.Succeeded)
@@ -187,6 +183,15 @@ namespace CvAPI2.Controllers
         {
             try
             {
+                var user = await _userService.GetUserById(id);
+                if (user == null) 
+                    return NotFound("Bruker finnes ikke!");
+
+                if (user.UserName.StartsWith("admin@", StringComparison.OrdinalIgnoreCase))
+                { 
+                    return BadRequest("Kan ikke slette admin-bruker.");
+                }
+
                 await _userService.DeleteUser(id);
                 return NoContent();
             }

@@ -1,4 +1,5 @@
 using CvAPI2.Models;
+using CvAPI2.Models.Tag;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,16 @@ public class CvDbContext : IdentityDbContext<User, Role, string>
     public DbSet<Cv> Cvs { get; set; }
     public DbSet<WorkExperience> WorkExperiences { get; set; }
     public DbSet<Education> Educations { get; set; }
+    public DbSet<Award> Awards { get; set; }
+    public DbSet<Certification> Certifications { get; set; }
+    public DbSet<CompetenceOverview> CompetenceOverviews { get; set; }
+    public DbSet<Course> Courses { get; set; }
+    public DbSet<Language> Languages { get; set; }
+    public DbSet<ProjectExperience> ProjectExperiences { get; set; }
+    public DbSet<RoleOverview> RoleOverviews { get; set; }
+    public DbSet<Tag> Tags { get; set; }
+    public DbSet<WorkExperienceTag> WorkExperienceTags { get; set; }
+    public DbSet<ProjectExperienceTag> ProjectExperienceTags { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -63,11 +74,6 @@ public class CvDbContext : IdentityDbContext<User, Role, string>
             .HasForeignKey(l => l.CvId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Cv>()
-            .HasMany(c => c.Positions)
-            .WithOne(p => p.Cv)
-            .HasForeignKey(p => p.CvId)
-            .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<Cv>()
             .HasMany(c => c.ProjectExperiences)
             .WithOne(p => p.Cv)
             .HasForeignKey(p => p.CvId)
@@ -77,6 +83,32 @@ public class CvDbContext : IdentityDbContext<User, Role, string>
             .WithOne(r => r.Cv)
             .HasForeignKey(r => r.CvId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<WorkExperienceTag>()
+            .HasKey(wet => new { wet.WorkExperienceId, wet.TagId });
+
+        modelBuilder.Entity<WorkExperienceTag>()
+            .HasOne(wet => wet.WorkExperience)
+            .WithMany(w => w.Tags)
+            .HasForeignKey(wet => wet.WorkExperienceId);   
+                 
+        modelBuilder.Entity<WorkExperienceTag>()
+            .HasOne(wet => wet.Tag)
+            .WithMany()
+            .HasForeignKey(wet => wet.TagId);
+        
+        modelBuilder.Entity<ProjectExperienceTag>()
+            .HasKey(pet => new { pet.ProjectExperienceId, pet.TagId });
+
+        modelBuilder.Entity<ProjectExperienceTag>()
+            .HasOne(pet => pet.ProjectExperience)
+            .WithMany(p => p.Tags)
+            .HasForeignKey(pet => pet.ProjectExperienceId);    
+
+        modelBuilder.Entity<ProjectExperienceTag>()
+            .HasOne(pet => pet.Tag)
+            .WithMany()
+            .HasForeignKey(pet => pet.TagId);        
     }
 
 }
