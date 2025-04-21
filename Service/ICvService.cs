@@ -15,6 +15,9 @@ public interface ICvService
     Task<Tag> GetOrCreateTagAsync(string value);
     Task UpdateMyCv(Cv existingCv, UpdateCvDto dto);
     Task<CvProfileDto?> GetCvProfileForUser(string userId);
+    CvForAI MapCvDtoToCvForAI(CvDto dto);
+    Task<string> GetCvSummaryFromOpenAIAsync(CvForAI cv);
+
 
 
 }

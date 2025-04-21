@@ -2,6 +2,10 @@ using CvAPI2.Models;
 using CvAPI2.Models.Tag;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
+using System.Net.Http.Headers;
+using System.Text.Json;
+
 
 
 public class CvService : ICvService
@@ -9,11 +13,13 @@ public class CvService : ICvService
 {
     private readonly ICvRepository _CvRepository;
     private readonly ILogger<CvService> _logger;
+    private readonly string _openAiKey;
 
-    public CvService(ICvRepository CvRepository, ILogger<CvService> logger)
+    public CvService(ICvRepository CvRepository, ILogger<CvService> logger, IConfiguration configuration)
     {
         _logger = logger;
         _CvRepository = CvRepository;
+        _openAiKey = configuration["OpenAI:ApiKey"] ?? throw new ArgumentNullException("OpenAI API key is not set in configuration.");
     }
 
     public Task<IEnumerable<Cv>> GetAllCvs() => _CvRepository.GetAllCvs();
@@ -722,6 +728,73 @@ public class CvService : ICvService
         {
             _logger.LogError(ex, "Feil under søk etter CV-er med søkeord: {Keywords}", string.Join(", ", keywords));
             return new List<CvDto>(); // returnerer tomt resultat for å ikke kræsje frontend
+        }
+    }
+
+    public CvForAI MapCvDtoToCvForAI(CvDto dto)
+    {
+        return new CvForAI
+        {
+            WorkExperiences = dto.WorkExperiences ?? new List<WorkExperienceDto>(),
+            ProjectExperiences = dto.ProjectExperiences ?? new List<ProjectExperienceDto>(),
+            Educations = dto.Educations ?? new List<EducationDto>(),
+            Courses = dto.Courses ?? new List<CourseDto>(),
+            Certifications = dto.Certifications ?? new List<CertificationDto>(),
+            Awards = dto.Awards ?? new List<AwardDto>(),
+            CompetenceOverviews = dto.CompetenceOverviews ?? new List<CompetenceOverviewDto>(),
+            Languages = dto.Languages ?? new List<LanguageDto>(),
+            RoleOverviews = dto.RoleOverviews ?? new List<RoleOverviewDto>()
+        };
+    }
+    public async Task<string> GetCvSummaryFromOpenAIAsync(CvForAI cv)
+    {
+        try
+        {
+            var prompt = $@"
+            Lag et kortfattet og profesjonelt sammendrag basert på denne CV-en. 
+            Ikke inkluder personlig informasjon. Fokuser på utdanning, arbeidserfaring, prosjekter, ferdigheter, språk og tags.
+
+            CV-data:
+            {JsonSerializer.Serialize(cv, new JsonSerializerOptions { WriteIndented = true })}
+            ";
+
+            var requestBody = new
+            {
+                model = "gpt-3.5-turbo",
+                messages = new[]
+                {
+                    new { role = "system", content = "Du er en profesjonell karriereveileder." },
+                    new { role = "user", content = prompt }
+                },
+                temperature = 0.7
+            };
+
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", _openAiKey);
+
+            var response = await client.PostAsJsonAsync("https://eso-m9r4t9se-eastus2.cognitiveservices.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview", requestBody);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                _logger.LogError("OpenAI-feil: {Error}", error);
+                return "Det oppstod en feil under generering av sammendrag.";
+            }
+
+            var json = await response.Content.ReadFromJsonAsync<JsonElement>();
+            var summary = json
+                .GetProperty("choices")[0]
+                .GetProperty("message")
+                .GetProperty("content")
+                .GetString();
+
+            return summary ?? "Kunne ikke hente sammendrag.";
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Feil ved kommunikasjon med OpenAI.");
+            return "Uventet feil under generering av sammendrag.";
         }
     }
 

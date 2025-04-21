@@ -111,6 +111,7 @@ builder.Services.AddCors(options =>
                         .AllowAnyHeader());
 });
 builder.Configuration.AddEnvironmentVariables();
+builder.Configuration.AddJsonFile("appsettings.json");
 
 builder.Services.AddDbContext<CvDbContext>(options =>
 {
