@@ -1,6 +1,7 @@
 # .NET artifacts
 bin/
 obj/
+.env
 *.user
 *.suo
 *.userosscache
