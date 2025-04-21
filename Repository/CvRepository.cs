@@ -39,20 +39,21 @@ public class CvRepository : ICvRepository
             .Include(c => c.Languages)
             .FirstOrDefaultAsync(c => c.Id == id);
 
-    public async Task<IEnumerable<Cv>> GetCvByUserId(string userId) =>
-        await _context.Cvs
-            .Where(cv => cv.UserId == userId)
+public async Task<Cv?> GetCvByUserId(string userId)
+    {
+        return await _context.Cvs
             .Include(c => c.User)
             .Include(c => c.WorkExperiences).ThenInclude(w => w.Tags).ThenInclude(t => t.Tag)
-            .Include(c => c.Educations)
-            .Include(c => c.Awards)
-            .Include(c => c.Courses)
-            .Include(c => c.Certifications)
-            .Include(c => c.CompetenceOverviews)
-            .Include(c => c.RoleOverviews)
             .Include(c => c.ProjectExperiences).ThenInclude(p => p.Tags).ThenInclude(t => t.Tag)
+            .Include(c => c.Educations)
+            .Include(c => c.Certifications)
+            .Include(c => c.Courses)
+            .Include(c => c.Awards)
+            .Include(c => c.CompetenceOverviews)
             .Include(c => c.Languages)
-            .ToListAsync();
+            .Include(c => c.RoleOverviews)
+            .FirstOrDefaultAsync(c => c.UserId == userId);
+    }
 
     public async Task AddCv(Cv cv)
     {
@@ -126,17 +127,24 @@ public class CvRepository : ICvRepository
                     
     }
 
-    public async Task<Tag> GetOrCreateTagAsync(string value)
+   public async Task<Tag> GetOrCreateTagAsync(string value)
     {
-        var tag = await _context.Tags.FirstOrDefaultAsync(t => t.Value == value);
-        if (tag == null)
-        {
-            tag = new Tag { Value = value };
-            _context.Tags.Add(tag);
-            await _context.SaveChangesAsync();
-        }
+        var existing = await _context.Tags.FirstOrDefaultAsync(t => t.Value == value);
+        if (existing != null)
+            return existing;
 
-        return tag;
+        var newTag = new Tag { Value = value };
+        _context.Tags.Add(newTag);
+        // await _context.SaveChangesAsync(); // Kalles kun én gang, ikke parallelt
+
+        return newTag;
     }
+
+
+    // public async Task SaveChangesAsync()
+    // {
+    //     await _context.SaveChangesAsync();
+    // }
+
 
 }

@@ -70,3 +70,11 @@ public class RoleOverviewDto
 }
 
 
+public class SearchCvRequest
+{
+    public List<string> Keywords { get; set; } = new();
+    public List<string> SearchIn { get; set; } = new(); // f.eks. ["work", "project"]
+}
+
+
+

@@ -1,13 +1,11 @@
+using CvAPI2.DTO;
 using CvAPI2.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 public interface IUserService
 {
-    Task<IEnumerable<User>> GetUsers();  
-    Task<User> GetUserById(string id);  
-    Task CreateUser(User user);            
-    Task UpdateUser(string id, User user);  
-    Task DeleteUser(string id);     
-
+    Task<IEnumerable<UserDto>> GetUsers();
+    Task<UserDto> GetUserById(string id);
+    Task<UserDto> CreateUser(CreateUserDto dto);
+    Task UpdateUser(string id, UpdateUserDto dto);
+    Task DeleteUser(string id);
 }

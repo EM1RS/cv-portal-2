@@ -28,6 +28,6 @@ public class CvPdfController : ControllerBase
         var document = new CvPdfDocument(cv);
         byte[] pdfBytes = document.GeneratePdf();
 
-        return File(pdfBytes, "application/pdf", $"CV_{cv.User?.FullName ?? "user"}.pdf");
+        return File(pdfBytes, "application/pdf", $"CV_{cv.User.FullName ?? "user"}.pdf");
     }
 }

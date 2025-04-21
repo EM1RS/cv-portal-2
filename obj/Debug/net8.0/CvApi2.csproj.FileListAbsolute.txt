@@ -370,6 +370,10 @@ C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250414195851_InitialCreateContainer.Designer.cs
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250418132046_AddTags.cs
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250418132046_AddTags.Designer.cs
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250419174507_AddWorkExperienceDescription.cs
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250419174507_AddWorkExperienceDescription.Designer.cs
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250419183726_AddWorkExperienceDescription2.cs
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250419183726_AddWorkExperienceDescription2.Designer.cs
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\CvDbContextModelSnapshot.cs
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\LatoFont\Lato-Black.ttf
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\LatoFont\Lato-BlackItalic.ttf
@@ -527,7 +531,3 @@ C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.pdb
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.genruntimeconfig.cache
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\ref\CvApi2.dll
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250419174507_AddWorkExperienceDescription.cs
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250419174507_AddWorkExperienceDescription.Designer.cs
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250419183726_AddWorkExperienceDescription2.cs
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250419183726_AddWorkExperienceDescription2.Designer.cs

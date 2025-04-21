@@ -28,24 +28,7 @@ namespace CvAPI2.Controllers
         {
             try
             {
-                var users = await _userService.GetUsers();
-                var userDtos = new List<UserDto>();
-
-                foreach (var user in users)
-                {
-                    var roles = await _userManager.GetRolesAsync(user);
-                    var role = roles.FirstOrDefault() ?? "ingen";
-
-                    userDtos.Add(new UserDto
-                    {
-                        Email = user.Email,
-                        FullName = user.FullName,
-                        Role = role,
-                        UserId = user.Id,
-                        CvId = user.Cv?.Id
-                    });
-                }
-
+                var userDtos = await _userService.GetUsers();
                 return Ok(userDtos);
             }
             catch (Exception ex)
@@ -55,34 +38,20 @@ namespace CvAPI2.Controllers
             }
         }
 
+
         [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDto>> GetUser(string id)
+        public async Task<ActionResult<UserDto>> GetUserById(string id)
         {
             try
             {
-                var user = await _userService.GetUserById(id);
-                if (user == null)
-                    return NotFound("Bruker ikke funnet.");
-
-                var roles = await _userManager.GetRolesAsync(user);
-                var role = roles.FirstOrDefault() ?? "ingen";
-
-                var userDto = new UserDto
-                {
-                    UserId = user.Id,
-                    FullName = user.FullName,
-                    Email = user.Email,
-                    Role = role,
-                    CvId = user.Cv?.Id
-                };
-
+                var userDto = await _userService.GetUserById(id);
                 return Ok(userDto);
             }
             catch (NotFoundException ex)
             {
                 _logger.LogWarning(ex, "Bruker med ID {Id} ble ikke funnet.", id);
-                return NotFound(ex.Message);
+                return NotFound(new ApiError { Message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -90,6 +59,7 @@ namespace CvAPI2.Controllers
                 return StatusCode(500, new ApiError { Message = "Uventet feil oppstod.", Details = ex.Message });
             }
         }
+
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
@@ -101,37 +71,14 @@ namespace CvAPI2.Controllers
                     .SelectMany(v => v.Errors)
                     .Select(e => e.ErrorMessage)
                     .ToList();
+
                 return BadRequest(new { message = "Valideringsfeil", errors });
             }
 
             try
             {
-                var user = new User
-                {
-                    FullName = newUser.FullName,
-                    Email = newUser.Email,
-                    UserName = newUser.Email
-                };
-
-                var result = await _userManager.CreateAsync(user, newUser.Password);
-                if (!result.Succeeded)
-                {
-                    var identityErrors = result.Errors.Select(e => e.Description);
-                    return BadRequest(new { message = "Feil under opprettelse", errors = identityErrors });
-                }
-
-                if (!string.IsNullOrEmpty(newUser.Role))
-                {
-                    await _userManager.AddToRoleAsync(user, newUser.Role);
-                }
-
-                var userDto = new UserDto
-                {
-                    Email = newUser.Email,
-                    FullName = newUser.FullName
-                };
-
-                return CreatedAtAction(nameof(GetUser), new { id = user.Id }, userDto);
+                var createdUser = await _userService.CreateUser(newUser);
+                return CreatedAtAction(nameof(GetUserById), new { id = createdUser.UserId }, createdUser);
             }
             catch (Exception ex)
             {
@@ -140,35 +87,20 @@ namespace CvAPI2.Controllers
             }
         }
 
+
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserDto updatedUser)
         {
             try
             {
-                var user = await _userManager.FindByIdAsync(id);
-                if (user == null) return NotFound("Bruker finnes ikke!");
-
-                user.FullName = updatedUser.FullName;
-                user.Email = updatedUser.Email;
-                user.UserName = updatedUser.Email;
-
-                var result = await _userManager.UpdateAsync(user);
-                if (!result.Succeeded)
-                {
-                    var errors = result.Errors.Select(e => e.Description);
-                    return BadRequest(new { message = "Oppdatering feilet!", errors });
-                }
-
-                var currentRole = await _userManager.GetRolesAsync(user);
-                await _userManager.RemoveFromRolesAsync(user, currentRole);
-
-                if (!string.IsNullOrEmpty(updatedUser.Role))
-                {
-                    await _userManager.AddToRoleAsync(user, updatedUser.Role);
-                }
-
+                await _userService.UpdateUser(id, updatedUser);
                 return NoContent();
+            }
+            catch (NotFoundException ex)
+            {
+                _logger.LogWarning(ex, "Bruker med ID {Id} ble ikke funnet.", id);
+                return NotFound(new ApiError { Message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -177,21 +109,13 @@ namespace CvAPI2.Controllers
             }
         }
 
+
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             try
             {
-                var user = await _userService.GetUserById(id);
-                if (user == null) 
-                    return NotFound("Bruker finnes ikke!");
-
-                if (user.UserName.StartsWith("admin@", StringComparison.OrdinalIgnoreCase))
-                { 
-                    return BadRequest("Kan ikke slette admin-bruker.");
-                }
-
                 await _userService.DeleteUser(id);
                 return NoContent();
             }
@@ -200,11 +124,16 @@ namespace CvAPI2.Controllers
                 _logger.LogWarning(ex, "Bruker med ID {Id} ikke funnet for sletting.", id);
                 return NotFound(ex.Message);
             }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new ApiError { Message = ex.Message });
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Feil ved sletting av bruker med ID {Id}", id);
                 return StatusCode(500, new ApiError { Message = "Uventet feil oppstod.", Details = ex.Message });
             }
         }
+
     }
 }
