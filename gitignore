@@ -6,6 +6,12 @@ obj/
 *.suo
 *.userosscache
 *.sln.docstates
+*.user
+*.db
+*.sqlite
+*.log
+*.pdb
+*.swp
 
 # Visual Studio Code
 .vscode/
