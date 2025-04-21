@@ -50,6 +50,16 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
 
+builder.Services.Configure<OpenAiSettings>(options =>
+{
+    builder.Configuration.GetSection("OpenAi").Bind(options);
+
+    var fromEnv = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+    if (!string.IsNullOrWhiteSpace(fromEnv))
+    {
+        options.ApiKey = fromEnv;
+    }
+});
 
 
 builder.Services.AddIdentity<User, Role>()

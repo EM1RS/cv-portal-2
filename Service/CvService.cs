@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using Microsoft.Extensions.Options;
 
 
 
@@ -15,11 +16,11 @@ public class CvService : ICvService
     private readonly ILogger<CvService> _logger;
     private readonly string _openAiKey;
 
-    public CvService(ICvRepository CvRepository, ILogger<CvService> logger, IConfiguration configuration)
+    public CvService(ICvRepository CvRepository, ILogger<CvService> logger, IOptions<OpenAiSettings> settings)
     {
         _logger = logger;
         _CvRepository = CvRepository;
-        _openAiKey = configuration["OpenAI:ApiKey"] ?? throw new ArgumentNullException("OpenAI API key is not set in configuration.");
+        _openAiKey = settings.Value.ApiKey;
     }
 
     public Task<IEnumerable<Cv>> GetAllCvs() => _CvRepository.GetAllCvs();
@@ -770,8 +771,8 @@ public class CvService : ICvService
             };
 
             using var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", _openAiKey);
+            client.DefaultRequestHeaders.Add("api-key", _openAiKey); // ✅ riktig for Azure
+
 
             var response = await client.PostAsJsonAsync("https://eso-m9r4t9se-eastus2.cognitiveservices.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview", requestBody);
 
