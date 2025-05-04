@@ -1,6 +1,5 @@
 using CvAPI2.Models;
 using CvAPI2.Models.Tag;
-using Microsoft.AspNetCore.Mvc;
 
 public interface ICvService
 {
@@ -15,9 +14,5 @@ public interface ICvService
     Task<Tag> GetOrCreateTagAsync(string value);
     Task UpdateMyCv(Cv existingCv, UpdateCvDto dto);
     Task<CvProfileDto?> GetCvProfileForUser(string userId);
-    //CvForAI MapCvDtoToCvForAI(CvDto dto);
-    //Task<string> GetCvSummaryFromOpenAIAsync(CvForAI cv);
-
-
 
 }

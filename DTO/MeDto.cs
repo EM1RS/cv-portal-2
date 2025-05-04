@@ -29,6 +29,8 @@ public class CvProfileDto
 {
     public string Id { get; set; }
     public string Personalia { get; set; }
+    public string? ProfileImageUrl { get; set; }
+
     public DateTime? DateOfBirth { get; set; }
     public string PhoneNumber { get; set; }
 

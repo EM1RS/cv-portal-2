@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using CvApi2.Service;
 using CvAPI2.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -6,14 +7,19 @@ using Microsoft.AspNetCore.Mvc;
 
 [Route("api/cvs")]
 [ApiController]
+
 public class CvController : ControllerBase
 {
     private readonly ICvService _cvService;
     private readonly UserManager<User> _userManager;
     private readonly ILogger<CvController> _logger;
-    public CvController(ICvService cvService, UserManager<User> userManager, ILogger<CvController> logger)
+
+    private readonly S3Service _s3Service;
+
+    public CvController(ICvService cvService, UserManager<User> userManager, ILogger<CvController> logger, S3Service s3Service)
     {
         _cvService = cvService;
+        _s3Service = s3Service;
         _userManager = userManager;
         _logger = logger;
     }
@@ -242,6 +248,24 @@ public class CvController : ControllerBase
             });
         }
     }
+    [HttpPost("{cvId}/upload-image")]
+    [Authorize(Roles = "User,Admin")]
+    public async Task<IActionResult> UploadProfileImage(string cvId, IFormFile file)
+    {
+        var cv = await _cvService.GetCvById(cvId);
+        if (cv == null)
+            return NotFound("CV ikke funnet.");
 
+        var fileName = $"{cvId}_{Path.GetFileName(file.FileName)}";
+        var imageUrl = await _s3Service.UploadAsync(file, fileName);
+
+        var updateDto = new UpdateCvDto
+        {
+            ProfileImageUrl = imageUrl
+        };
+        await _cvService.UpdateCvFromDto(cv, updateDto); 
+
+        return Ok(new { imageUrl });
+    }
     
 }

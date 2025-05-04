@@ -76,6 +76,7 @@ public class CvService : ICvService
                 Id = cv.Id,
                 Personalia = cv.Personalia,
                 DateOfBirth = cv.DateOfBirth,
+                ProfileImageUrl = cv.ProfileImageUrl,
                 PhoneNumber = cv.PhoneNumber,
 
                 Educations = cv.Educations?.Select(e => new EducationDto
@@ -178,6 +179,7 @@ public class CvService : ICvService
                 Id = cv.Id,
                 Personalia = cv.Personalia,
                 DateOfBirth = cv.DateOfBirth,
+                ProfileImageUrl = cv.ProfileImageUrl,
                 UserId = cv.UserId,
                 FullName = cv.User?.FullName ?? string.Empty,
 
@@ -284,6 +286,7 @@ public class CvService : ICvService
                 Id = cv.Id,
                 Personalia = cv.Personalia,
                 DateOfBirth = cv.DateOfBirth,
+                ProfileImageUrl = cv.ProfileImageUrl,
                 PhoneNumber = cv.PhoneNumber,
                 UserId = cv.UserId,
                 FullName = cv.User?.FullName ?? string.Empty,
@@ -378,6 +381,7 @@ public class CvService : ICvService
             {
                 Personalia = dto.Personalia,
                 DateOfBirth = dto.DateOfBirth,
+                ProfileImageUrl = dto.ProfileImageUrl,
                 PhoneNumber = dto.PhoneNumber,
                 UserId = userId.ToLower(),
 
@@ -516,9 +520,17 @@ public class CvService : ICvService
         {
             _logger.LogInformation("Starter oppdatering av CV-ID {CvId}", existingCv.Id);
 
-            existingCv.Personalia = dto.Personalia;
-            existingCv.DateOfBirth = dto.DateOfBirth;
-            existingCv.PhoneNumber = dto.PhoneNumber;
+            if (dto.Personalia != null)
+                existingCv.Personalia = dto.Personalia;
+
+            if (dto.DateOfBirth != null)
+                existingCv.DateOfBirth = dto.DateOfBirth;
+
+            if (dto.ProfileImageUrl != null)
+                existingCv.ProfileImageUrl = dto.ProfileImageUrl;
+
+            if (dto.PhoneNumber != null)
+                existingCv.PhoneNumber = dto.PhoneNumber;
 
             var allTags = new Dictionary<string, Tag>();
             var allTagValues = (dto.WorkExperiences?.SelectMany(w => w.Tags ?? new List<string>()) ?? Enumerable.Empty<string>())
@@ -647,6 +659,7 @@ public class CvService : ICvService
                 Id = cv.Id,
                 Personalia = cv.Personalia,
                 DateOfBirth = cv.DateOfBirth,
+                ProfileImageUrl = cv.ProfileImageUrl,
                 PhoneNumber = cv.PhoneNumber,
                 UserId = cv.UserId,
                 FullName = cv.User?.FullName ?? "",

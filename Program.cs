@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Text.Json.Serialization;
+using Amazon.S3;
 using CvAPI2.Models;
 using CvAPI2.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,6 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using QuestPDF.Infrastructure;
+using Amazon.Extensions.NETCore.Setup;
+using CvApi2.Service;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 //builder.WebHost.UseUrls("http://localhost:5005");
@@ -155,6 +160,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICvService, CvService>();
 builder.Services.AddScoped<ICvRepository, CvRepository>();
 builder.Services.AddScoped<IPromptService, PromptService>();
+builder.Services.AddSingleton<S3Service>();
+builder.Services.AddAWSService<IAmazonS3>();
 
 
 

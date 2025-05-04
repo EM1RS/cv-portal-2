@@ -8,6 +8,8 @@
     ".NETCoreApp,Version=v8.0": {
       "CvApi2/1.0.0": {
         "dependencies": {
+          "AWSSDK.Extensions.NETCore.Setup": "4.0.0",
+          "AWSSDK.S3": "4.0.0.1",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.0",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.0",
           "Microsoft.AspNetCore.OpenApi": "8.0.14",
@@ -22,6 +24,39 @@
         },
         "runtime": {
           "CvApi2.dll": {}
+        }
+      },
+      "AWSSDK.Core/4.0.0.2": {
+        "runtime": {
+          "lib/net8.0/AWSSDK.Core.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.0.2"
+          }
+        }
+      },
+      "AWSSDK.Extensions.NETCore.Setup/4.0.0": {
+        "dependencies": {
+          "AWSSDK.Core": "4.0.0.2",
+          "Microsoft.Extensions.Configuration.Abstractions": "8.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.0"
+        },
+        "runtime": {
+          "lib/net8.0/AWSSDK.Extensions.NETCore.Setup.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.0.0"
+          }
+        }
+      },
+      "AWSSDK.S3/4.0.0.1": {
+        "dependencies": {
+          "AWSSDK.Core": "4.0.0.2"
+        },
+        "runtime": {
+          "lib/net8.0/AWSSDK.S3.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.0.1"
+          }
         }
       },
       "Humanizer.Core/2.14.1": {
@@ -851,6 +886,27 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "AWSSDK.Core/4.0.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-vXDAkmIB8xMmtnWubDq/uZhpfTXKAHicnTQTJBjkjNvom7eaHf5r0OB3Be+cXzzcQl4O1UOOAYHyN436JSCUlA==",
+      "path": "awssdk.core/4.0.0.2",
+      "hashPath": "awssdk.core.4.0.0.2.nupkg.sha512"
+    },
+    "AWSSDK.Extensions.NETCore.Setup/4.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VJP+y186CTC8NSadjzLGIjJ2TNUOps9QR9QyWMkPHdmLX8HlMiS8Bp8mESJ+MnZupvZ5z5KB9sF42lSEHo9lgQ==",
+      "path": "awssdk.extensions.netcore.setup/4.0.0",
+      "hashPath": "awssdk.extensions.netcore.setup.4.0.0.nupkg.sha512"
+    },
+    "AWSSDK.S3/4.0.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YnJvGSgaQt58iyuLR51IqqC8PmJvpQYw6AlkNM09sCk1q/BHNYVO3EzkQHPmvzF1Ajr6iJ42PDuAwbx8+/rbCg==",
+      "path": "awssdk.s3/4.0.0.1",
+      "hashPath": "awssdk.s3.4.0.0.1.nupkg.sha512"
     },
     "Humanizer.Core/2.14.1": {
       "type": "package",

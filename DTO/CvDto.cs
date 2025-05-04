@@ -6,6 +6,8 @@ public class CvDto
     public string Id { get; set; }
     [Required]
     public string Personalia { get; set; }
+    public string? ProfileImageUrl { get; set; }
+
     public DateTime DateOfBirth { get; set; }
     public string UserId { get; set; }
     public string FullName { get; set; }  

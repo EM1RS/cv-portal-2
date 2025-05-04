@@ -6,6 +6,7 @@ namespace CvAPI2.Models
     public class Cv
     {
         public string Id { get; set; } = Guid.NewGuid().ToString(); 
+        public string? ProfileImageUrl { get; set; }
         public string Personalia { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string PhoneNumber { get; set; }

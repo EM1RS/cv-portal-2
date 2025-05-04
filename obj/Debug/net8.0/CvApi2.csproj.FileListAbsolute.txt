@@ -53,6 +53,9 @@ C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\CvApi2.runtimeconfig.json
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\CvApi2.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\CvApi2.pdb
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\AWSSDK.Core.dll
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\AWSSDK.Extensions.NETCore.Setup.dll
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\AWSSDK.S3.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Humanizer.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
@@ -193,3 +196,5 @@ C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.pdb
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.genruntimeconfig.cache
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\ref\CvApi2.dll
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250504163423_imagesAddedOnCv.cs
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250504163423_imagesAddedOnCv.Designer.cs
