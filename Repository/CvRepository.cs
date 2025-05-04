@@ -135,16 +135,32 @@ public async Task<Cv?> GetCvByUserId(string userId)
 
         var newTag = new Tag { Value = value };
         _context.Tags.Add(newTag);
-        // await _context.SaveChangesAsync(); // Kalles kun én gang, ikke parallelt
+        // await _context.SaveChangesAsync(); 
 
         return newTag;
     }
 
+    public async Task AddSummaryAsync(CvSummary summary)
 
-    // public async Task SaveChangesAsync()
-    // {
-    //     await _context.SaveChangesAsync();
-    // }
+    {
+        _context.CvSummaries.Add(summary);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<CvSummary>> GetAllSummariesAsync()
+    {
+        return await _context.CvSummaries.ToListAsync();
+    }
+
+    public async Task DeleteSummaryAsync(string summaryId)
+    {
+        var summary = await _context.CvSummaries.FindAsync(summaryId);
+        if (summary != null)
+        {
+            _context.CvSummaries.Remove(summary);
+            await _context.SaveChangesAsync();
+        }
+    }
 
 
 }

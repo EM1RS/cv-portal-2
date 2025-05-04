@@ -71,11 +71,17 @@ public class MeController : ControllerBase
                 return NotFound("Fant ingen bruker med denne ID-en.");
             }
 
+            var roles = await _userManager.GetRolesAsync(user);
+            var roleName = roles.FirstOrDefault(); 
+
             var dto = new MeProfileDto
             {
                 Id = user.Id,
                 Email = user.Email,
-                FullName = user.FullName
+                FullName = user.FullName,
+                PhoneNumber = user.PhoneNumber,
+                Role = roleName
+                
             };
 
             return Ok(dto);
@@ -87,7 +93,7 @@ public class MeController : ControllerBase
         }
     }
 
-    [Authorize (Roles = "User,Admin")]
+   [Authorize(Roles = "User,Admin")]
     [HttpPut("user")]
     public async Task<IActionResult> UpdateMyUser([FromBody] MeEditDto dto)
     {
@@ -97,7 +103,22 @@ public class MeController : ControllerBase
             return NotFound("Bruker ikke funnet.");
 
         user.FullName = dto.FullName;
-        user.Email = dto.Email;
+
+        // Oppdater e-post riktig
+        if (user.Email != dto.Email)
+        {
+            var emailResult = await _userManager.SetEmailAsync(user, dto.Email);
+            if (!emailResult.Succeeded)
+                return BadRequest(emailResult.Errors.Select(e => e.Description));
+        }
+
+        // Oppdater telefonnummer riktig
+        if (user.PhoneNumber != dto.PhoneNumber)
+        {
+            var phoneResult = await _userManager.SetPhoneNumberAsync(user, dto.PhoneNumber);
+            if (!phoneResult.Succeeded)
+                return BadRequest(phoneResult.Errors.Select(e => e.Description));
+        }
 
         // Hvis bruker prøver å endre passord
         if (!string.IsNullOrWhiteSpace(dto.NewPassword))
@@ -113,6 +134,7 @@ public class MeController : ControllerBase
         await _userManager.UpdateAsync(user);
         return NoContent();
     }
+
 
     [Authorize(Roles = "User,Admin")]
     [HttpPut("cv")]

@@ -1,7 +1,7 @@
 public class CreateCvDto {
     public string Personalia { get; set; } = string.Empty;
     public DateTime DateOfBirth { get; set; }
-    public int PhoneNumber { get; set; }
+    public string PhoneNumber { get; set; }
     public List<EducationDto>? Educations { get; set; }
     public List<WorkExperienceDto>? WorkExperiences { get; set; }
     public List<AwardDto>? Awards { get; set; }

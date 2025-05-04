@@ -21,6 +21,7 @@ public class CvDbContext : IdentityDbContext<User, Role, string>
     public DbSet<Tag> Tags { get; set; }
     public DbSet<WorkExperienceTag> WorkExperienceTags { get; set; }
     public DbSet<ProjectExperienceTag> ProjectExperienceTags { get; set; }
+    public DbSet<CvSummary> CvSummaries { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -108,7 +109,11 @@ public class CvDbContext : IdentityDbContext<User, Role, string>
         modelBuilder.Entity<ProjectExperienceTag>()
             .HasOne(pet => pet.Tag)
             .WithMany()
-            .HasForeignKey(pet => pet.TagId);        
+            .HasForeignKey(pet => pet.TagId);      
+        modelBuilder.Entity<Cv>()
+            .HasMany(c => c.CvSummaries) 
+            .WithOne(s => s.Cv)
+            .HasForeignKey(s => s.CvId);  
     }
 
 }

@@ -40,15 +40,15 @@ public class CvController : ControllerBase
     public async Task<IActionResult> GetCvById(string id)
     {
         if (string.IsNullOrWhiteSpace(id))
-            return BadRequest(ApiResponse<string>.Fail("Cv-ID mangler"));
+            return BadRequest("Cv-ID mangler");
 
         try
         {
             var cvDto = await _cvService.GetCvDtoById(id);
             if (cvDto == null)
-                return NotFound(ApiResponse<string>.Fail("CV ikke funnet"));
+                return NotFound("CV ikke funnet");
 
-            return Ok(ApiResponse<CvDto>.Ok(cvDto));
+            return Ok(cvDto);
         }
         catch (Exception ex)
         {
@@ -243,37 +243,5 @@ public class CvController : ControllerBase
         }
     }
 
-    [HttpPost("sum/{id}")]
-    public async Task<IActionResult> GenerateSummary(string id)
-    {
-        try
-        {
-            var cvDto = await _cvService.GetCvDtoById(id);
-            if (cvDto == null)
-            {
-                _logger.LogWarning("Ingen CV funnet med ID {CvId}", id);
-                return NotFound(new ApiError
-                {
-                    Message = "CV ikke funnet.",
-                    Details = $"Ingen CV med ID {id} eksisterer."
-                });
-            }
-
-            var sanitized = _cvService.MapCvDtoToCvForAI(cvDto);
-            var summary = await _cvService.GetCvSummaryFromOpenAIAsync(sanitized);
-
-            _logger.LogInformation("Sammendrag generert for CV {CvId}", id);
-            return Ok(new { summary });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Feil ved generering av sammendrag for CV {CvId}", id);
-            return StatusCode(500, new ApiError
-            {
-                Message = "Uventet feil under generering av sammendrag.",
-                Details = ex.Message
-            });
-        }
-    }
-
+    
 }

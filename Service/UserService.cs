@@ -33,6 +33,7 @@ namespace CvAPI2.Services
                     UserId = user.Id,
                     FullName = user.FullName,
                     Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
                     Role = role,
                     CvId = user.Cv?.Id
                 });
@@ -56,6 +57,7 @@ namespace CvAPI2.Services
                 UserId = user.Id,
                 FullName = user.FullName,
                 Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
                 Role = role,
                 CvId = user.Cv?.Id
             };
@@ -68,7 +70,8 @@ namespace CvAPI2.Services
             {
                 FullName = newUser.FullName,
                 Email = newUser.Email,
-                UserName = newUser.Email
+                UserName = newUser.Email,
+                PhoneNumber = newUser.PhoneNumber
             };
 
             var result = await _userManager.CreateAsync(user, newUser.Password);
@@ -88,6 +91,7 @@ namespace CvAPI2.Services
                 UserId = user.Id,
                 Email = user.Email,
                 FullName = user.FullName,
+                PhoneNumber = user.PhoneNumber,
                 Role = newUser.Role
             };
         }
@@ -103,6 +107,7 @@ namespace CvAPI2.Services
             user.FullName = updatedUser.FullName;
             user.Email = updatedUser.Email;
             user.UserName = updatedUser.Email;
+            user.PhoneNumber = updatedUser.PhoneNumber;
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)

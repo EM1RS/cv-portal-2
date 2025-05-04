@@ -8,10 +8,11 @@ namespace CvAPI2.Models
         public string Id { get; set; } = Guid.NewGuid().ToString(); 
         public string Personalia { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
         [Required]
         public string UserId { get; set; }
         public User User { get; set; }  
+        public ICollection<CvSummary> CvSummaries { get; set; } = new List<CvSummary>();
 
         public ICollection<WorkExperience> WorkExperiences { get; set; } = new List<WorkExperience>();
         public ICollection<Education>? Educations { get; set; } 

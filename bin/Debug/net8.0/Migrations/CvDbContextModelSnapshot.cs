@@ -145,8 +145,9 @@ namespace CvApi2.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("PhoneNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -158,6 +159,32 @@ namespace CvApi2.Migrations
                         .IsUnique();
 
                     b.ToTable("Cvs");
+                });
+
+            modelBuilder.Entity("CvAPI2.Models.CvSummary", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CvId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("SummaryText")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CvId");
+
+                    b.ToTable("CvSummaries");
                 });
 
             modelBuilder.Entity("CvAPI2.Models.Education", b =>
@@ -603,6 +630,17 @@ namespace CvApi2.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CvAPI2.Models.CvSummary", b =>
+                {
+                    b.HasOne("CvAPI2.Models.Cv", "Cv")
+                        .WithMany("CvSummaries")
+                        .HasForeignKey("CvId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cv");
+                });
+
             modelBuilder.Entity("CvAPI2.Models.Education", b =>
                 {
                     b.HasOne("CvAPI2.Models.Cv", "Cv")
@@ -758,6 +796,8 @@ namespace CvApi2.Migrations
                     b.Navigation("CompetenceOverviews");
 
                     b.Navigation("Courses");
+
+                    b.Navigation("CvSummaries");
 
                     b.Navigation("Educations");
 

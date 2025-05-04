@@ -11,6 +11,8 @@ namespace CvAPI2.DTO
         [Required]
         public string FullName { get; set; }
 
+        public string PhoneNumber { get; set; }
+
         [Required]
         [MinLength(6, ErrorMessage = "Passordet må være minst 6 tegn!")]
         public string Password { get; set; }

@@ -2,7 +2,7 @@ public class UpdateCvDto
 {
     public string Personalia { get; set; }
     public DateTime DateOfBirth { get; set; }
-    public int PhoneNumber { get; set; }
+    public string PhoneNumber { get; set; }
     public List<WorkExperienceDto>? WorkExperiences { get; set; }
     public List<EducationDto>? Educations { get; set; }
     

@@ -123,20 +123,38 @@ builder.Services.AddCors(options =>
 builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddJsonFile("appsettings.json");
 
+// builder.Services.AddDbContext<CvDbContext>(options =>
+// {
+//     options.UseMySql(
+//         builder.Configuration.GetConnectionString("DefaultConnection"),
+//         new MySqlServerVersion(new Version(8, 0, 42))
+//     );
+// });
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var envConn = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+if (!string.IsNullOrWhiteSpace(envConn))
+{
+    connectionString = envConn;
+}
+
 builder.Services.AddDbContext<CvDbContext>(options =>
 {
     options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
+        connectionString,
         new MySqlServerVersion(new Version(8, 0, 42))
     );
 });
-        
+
+
+
 
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICvService, CvService>();
 builder.Services.AddScoped<ICvRepository, CvRepository>();
+builder.Services.AddScoped<IPromptService, PromptService>();
 
 
 

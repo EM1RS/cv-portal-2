@@ -26,7 +26,7 @@ public static class SeedData
         var userRole = await roleManager.FindByNameAsync("User");
 
         // 3. Opprett admin-bruker
-        var adminEmail = "eso@trimit.com";
+        var adminEmail = "admin@admin.com";
         var adminUser = await userManager.FindByEmailAsync(adminEmail);
         if (adminUser == null)
         {

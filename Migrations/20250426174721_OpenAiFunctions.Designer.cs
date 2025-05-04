@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CvApi2.Migrations
 {
     [DbContext(typeof(CvDbContext))]
-    partial class CvDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250426174721_OpenAiFunctions")]
+    partial class OpenAiFunctions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,7 +185,8 @@ namespace CvApi2.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CvId");
+                    b.HasIndex("CvId")
+                        .IsUnique();
 
                     b.ToTable("CvSummaries");
                 });
@@ -633,8 +637,8 @@ namespace CvApi2.Migrations
             modelBuilder.Entity("CvAPI2.Models.CvSummary", b =>
                 {
                     b.HasOne("CvAPI2.Models.Cv", "Cv")
-                        .WithMany("CvSummaries")
-                        .HasForeignKey("CvId")
+                        .WithOne("CvSummary")
+                        .HasForeignKey("CvAPI2.Models.CvSummary", "CvId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -797,7 +801,8 @@ namespace CvApi2.Migrations
 
                     b.Navigation("Courses");
 
-                    b.Navigation("CvSummaries");
+                    b.Navigation("CvSummary")
+                        .IsRequired();
 
                     b.Navigation("Educations");
 
