@@ -19,3 +19,4 @@ obj/
 # Secrets
 *.env
 appsettings.*.json
+appsettings*.json
