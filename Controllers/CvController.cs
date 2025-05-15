@@ -64,7 +64,7 @@ public class CvController : ControllerBase
     }
 
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "User, Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateCv([FromBody] CreateCvDto dtoCreate)
     {

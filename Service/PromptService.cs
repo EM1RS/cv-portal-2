@@ -35,7 +35,7 @@ public class PromptService : IPromptService
 
             var requestBody = new
             {
-                model = "gpt-3.5-turbo",
+                model = "gpt-4-turbo",
                 messages = new[]
                 {
                     new { role = "system", content = "Du er en profesjonell karriereveileder." },
@@ -72,13 +72,13 @@ public class PromptService : IPromptService
         }
     }
 
-    public async Task SaveSummaryToDatabaseAsync(string cvId, string summary)
+    public async Task<bool> SaveSummaryToDatabaseAsync(string cvId, string summary)
     {
         var cv = await _cvRepository.GetCvById(cvId);
         if (cv == null)
         {
-            _logger.LogWarning("Prøvde å lagre sammendrag på en CV som ikke finnes: {CvId}", cvId);
-            throw new Exception("CV ikke funnet.");
+            _logger.LogWarning("CV ikke funnet ved lagring: {CvId}", cvId);
+            return false;
         }
 
         var cvSummary = new CvSummary
@@ -88,15 +88,19 @@ public class PromptService : IPromptService
         };
 
         await _cvRepository.AddSummaryAsync(cvSummary);
+        return true;
     }
+
 
 
     public async Task<string> GenerateAndOptionallySaveSummaryAsync(string cvId, bool save)
     {
         var cv = await _cvRepository.GetCvById(cvId);
         if (cv == null)
-            throw new Exception("CV ikke funnet.");
-
+        {
+            _logger.LogWarning("Ingen CV funnet med ID: {cvId}", cvId);
+            return null;
+        }
         var cvForAI = MapCvToCvForAI(cv); 
         var summary = await GenerateSummaryAsync(cvForAI);
 
@@ -119,7 +123,7 @@ public class PromptService : IPromptService
                 Company = w.CompanyName,
                 Position = w.Position,
                 From = w.StartDate,
-                To = w.EndDate,
+                To = w.EndDate ?? default,
                Tags = w.Tags?.Select(t => t.Tag.Value).ToList() ?? new List<string>()
             }).ToList() ?? new List<WorkExperienceDto>(),
 
@@ -189,9 +193,9 @@ public class PromptService : IPromptService
 
         };
     }
-    public async Task<IEnumerable<CvSummary>> GetAllSummariesAsync()
+    public async Task<CvSummary?> GetSummaryByIdAsync(string cvId)
     {
-        return await _cvRepository.GetAllSummariesAsync();
+        return await _cvRepository.GetSummaryByIdAsync(cvId);
     }
 
 
@@ -203,8 +207,11 @@ public class PromptService : IPromptService
     public async Task<string> EvaluateCandidateAsync(string cvId, string requirements)
     {
         var cv = await _cvRepository.GetCvById(cvId);
-        if (cv == null)
-            throw new Exception("CV ikke funnet.");
+            if (cv == null)
+            {
+                _logger.LogWarning("Ingen CV funnet med ID {CvId} ved evaluering", cvId);
+                return null;
+            }
 
         var cvForAi = MapCvToCvForAI(cv);
 
@@ -261,7 +268,7 @@ public class PromptService : IPromptService
         {
             var error = await response.Content.ReadAsStringAsync();
             _logger.LogError("OpenAI-feil ved evaluering: {Error}", error);
-            throw new Exception("Feil ved evaluering av kandidat.");
+            return null;
         }
 
         var json = await response.Content.ReadFromJsonAsync<JsonElement>();

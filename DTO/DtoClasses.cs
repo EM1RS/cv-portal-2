@@ -20,7 +20,6 @@ public class WorkExperienceDto
 public class AwardDto {
     public string Name { get; set; } = string.Empty;
     public string AwardDescription { get; set; } = string.Empty;
-
     public string Organization { get; set; } = string.Empty;
     public int Year { get; set; }
 }

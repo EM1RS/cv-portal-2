@@ -12,7 +12,7 @@ public interface ICvRepository
     Task<List<Cv>> SearchCvsByKeywords(List<string> keywords);
     Task<Tag> GetOrCreateTagAsync(string value);
     Task AddSummaryAsync(CvSummary summary);
-    Task<IEnumerable<CvSummary>> GetAllSummariesAsync();
+    Task<CvSummary?> GetSummaryByIdAsync(string cvId);
     Task DeleteSummaryAsync(string summaryId);
 
 

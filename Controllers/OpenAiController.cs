@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 [Route("api/AI")]
 [ApiController]
-
 public class OpenAIController : ControllerBase
 {
     private readonly IPromptService _promptService;
@@ -20,56 +19,93 @@ public class OpenAIController : ControllerBase
         _userManager = userManager;
     }
 
-    
     [HttpPost("summary/{cvId}")]
     public async Task<IActionResult> GenerateAndSaveSummary(string cvId)
     {
-        var summary = await _promptService.GenerateAndOptionallySaveSummaryAsync(cvId, save: false);
-        
-        if (summary == null)
+        try
         {
-            return NotFound(new { message = "Ingen CV funnet." });
-        }
+            var summary = await _promptService.GenerateAndOptionallySaveSummaryAsync(cvId, save: false);
 
-        return Ok(new { message = "Sammendrag generert.", summary });
+            if (summary == null)
+                return NotFound(ApiResponse<string>.Fail("CV ikke funnet."));
+
+            return Ok(ApiResponse<string>.Ok(summary, "Sammendrag generert."));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Feil ved generering av sammendrag.");
+            return StatusCode(500, new ApiError { Message = "Uventet feil oppstod.", Details = ex.Message });
+        }
     }
-    
+
     [HttpPost("summary/save/{cvId}")]
     public async Task<IActionResult> SaveSummary(string cvId, [FromBody] string summaryText)
     {
-        await _promptService.SaveSummaryToDatabaseAsync(cvId, summaryText);
-        return Ok(new { message = "Sammendrag lagret." });
+        try
+        {
+            var success = await _promptService.SaveSummaryToDatabaseAsync(cvId, summaryText);
+            if (!success)
+                return NotFound(ApiResponse<string>.Fail("CV ikke funnet, kunne ikke lagre sammendrag."));
+
+            return Ok(ApiResponse<string>.Ok(summaryText, "Sammendrag lagret."));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Feil ved lagring av sammendrag.");
+            return StatusCode(500, new ApiError { Message = "Uventet feil oppstod.", Details = ex.Message });
+        }
     }
 
-
-    [HttpGet("summaries")]
-    public async Task<IActionResult> GetAllSummaries()
+    [HttpGet("summary/{cvId}")]
+    public async Task<IActionResult> GetSummaryById(string cvId)
     {
-        var summaries = await _promptService.GetAllSummariesAsync();
-
-        if (summaries == null || !summaries.Any())
+        try
         {
-            return NotFound(new { message = "Ingen sammendrag funnet." });
-        }
+            var summary = await _promptService.GetSummaryByIdAsync(cvId);
 
-        return Ok(summaries);
+            if (summary == null)
+                return NotFound(ApiResponse<string>.Fail($"Ingen sammendrag funnet for ID: {cvId}."));
+
+            return Ok(ApiResponse<CvSummary>.Ok(summary));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Feil ved henting av sammendrag.");
+            return StatusCode(500, new ApiError { Message = "Uventet feil oppstod.", Details = ex.Message });
+        }
     }
 
     [HttpDelete("summary/{summaryId}")]
     public async Task<IActionResult> DeleteSummary(string summaryId)
     {
-        await _promptService.DeleteSummaryAsync(summaryId);
-        return Ok(new { message = "Sammendrag slettet." });
+        try
+        {
+            await _promptService.DeleteSummaryAsync(summaryId);
+            return Ok(ApiResponse<string>.Ok(summaryId, "Sammendrag slettet."));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Feil ved sletting av sammendrag.");
+            return StatusCode(500, new ApiError { Message = "Uventet feil oppstod.", Details = ex.Message });
+        }
     }
-
 
     [HttpPost("evaluate-candidate/{cvId}")]
     public async Task<IActionResult> EvaluateCandidate(string cvId, [FromBody] string requirements)
     {
-        var evaluation = await _promptService.EvaluateCandidateAsync(cvId, requirements);
-        return Ok(new { result = evaluation });
+        try
+        {
+            var evaluation = await _promptService.EvaluateCandidateAsync(cvId, requirements);
+
+            if (evaluation == null)
+                return NotFound(ApiResponse<string>.Fail("CV ikke funnet for evaluering."));
+
+            return Ok(ApiResponse<string>.Ok(evaluation, "Evaluering gjennomført."));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Feil ved evaluering av kandidat.");
+            return StatusCode(500, new ApiError { Message = "Uventet feil oppstod.", Details = ex.Message });
+        }
     }
-
-
-
 }

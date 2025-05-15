@@ -14,7 +14,7 @@ namespace CvAPI2.DTO
         public string PhoneNumber { get; set; }
 
         [Required]
-        [MinLength(6, ErrorMessage = "Passordet må være minst 6 tegn!")]
+        [MinLength(6, ErrorMessage = "Passordet må inneholde minst en stor bokstav og en karakter!")]
         public string Password { get; set; }
 
         [RegularExpression("^(Admin|User)$", ErrorMessage = "Rollen må være enten 'Admin' eller 'User'")]

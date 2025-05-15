@@ -147,9 +147,9 @@ public async Task<Cv?> GetCvByUserId(string userId)
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<CvSummary>> GetAllSummariesAsync()
+    public async Task<CvSummary?> GetSummaryByIdAsync(string cvId)
     {
-        return await _context.CvSummaries.ToListAsync();
+        return await _context.CvSummaries.FirstOrDefaultAsync(s => s.CvId == cvId);
     }
 
     public async Task DeleteSummaryAsync(string summaryId)

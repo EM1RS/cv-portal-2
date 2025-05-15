@@ -48,34 +48,36 @@ public class CvPdfDocument : IDocument
                 col.Item().Text($"• {edu.Degree} ved {edu.School} ({edu.StartDate:yyyy} - {edu.EndDate.ToString("yyyy") ?? "pågår"})");
         });
 
-   void ComposeWorkExperience(IContainer container) =>
-    container.Column(col =>
-    {
-        col.Item().Text("Arbeidserfaring").FontSize(14).Bold();
-        foreach (var job in _cv.WorkExperiences)
+    void ComposeWorkExperience(IContainer container) =>
+        container.Column(col =>
         {
-            col.Item().Text($"• {job.Position} hos {job.CompanyName} ({job.StartDate:yyyy} - {job.EndDate.ToString("yyyy") ?? "pågår"})");
-            foreach (var tag in job.Tags.Select(t => t.Tag.Value))
-                {
-                    col.Item().Text($"   – Tag: {tag}"); 
-                }            
+            col.Item().Text("Arbeidserfaring").FontSize(14).Bold();
 
-        }
-    });
+            foreach (var job in _cv.WorkExperiences)
+            {
+                var endYear = job.EndDate?.ToString("yyyy") ?? "pågår";
+                col.Item().Text($"• {job.Position} hos {job.CompanyName} ({job.StartDate:yyyy} - {endYear})");
+
+                foreach (var tag in job.Tags.Select(t => t.Tag.Value))
+                {
+                    col.Item().Text($"   – Tag: {tag}");
+                }
+            }
+        });
 
     void ComposeProjectExperiences(IContainer container) =>
-    container.Column(col =>
-    {
-        col.Item().Text("Prosjekter").FontSize(14).Bold();
-        foreach (var proj in _cv.ProjectExperiences)
+        container.Column(col =>
         {
-            col.Item().Text($"• {proj.ProjectName} - {proj.CompanyName} ({proj.StartDate:yyyy} - {proj.EndDate.ToString("yyyy") ?? "pågår"})");
-            foreach (var tag in proj.Tags.Select(t => t.Tag.Value))
-                {
-                    col.Item().Text($"   – Tag: {tag}"); 
-                }
-        }
-    });
+            col.Item().Text("Prosjekter").FontSize(14).Bold();
+            foreach (var proj in _cv.ProjectExperiences)
+            {
+                col.Item().Text($"• {proj.ProjectName} - {proj.CompanyName} ({proj.StartDate:yyyy} - {proj.EndDate.ToString("yyyy") ?? "pågår"})");
+                foreach (var tag in proj.Tags.Select(t => t.Tag.Value))
+                    {
+                        col.Item().Text($"   – Tag: {tag}"); 
+                    }
+            }
+        });
 
 
     void ComposeLanguages(IContainer container) =>

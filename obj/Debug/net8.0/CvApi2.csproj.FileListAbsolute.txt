@@ -1,3 +1,11 @@
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.csproj.AssemblyReference.cache
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.AssemblyInfoInputs.cache
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.AssemblyInfo.cs
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.csproj.CoreCompileInputs.cache
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.sourcelink.json
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\appsettings.json
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250412185635_InitialCreate.cs
@@ -28,6 +36,8 @@ C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250426174721_OpenAiFunctions.Designer.cs
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250426200811_CvSummaryAdded.cs
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250426200811_CvSummaryAdded.Designer.cs
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250504163423_imagesAddedOnCv.cs
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250504163423_imagesAddedOnCv.Designer.cs
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\CvDbContextModelSnapshot.cs
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\LatoFont\Lato-Black.ttf
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\LatoFont\Lato-BlackItalic.ttf
@@ -174,14 +184,6 @@ C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\runtimes\win-x86\native\libstdc++-6.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\runtimes\win-x86\native\libwinpthread-1.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\runtimes\win-x86\native\qpdf.dll
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.csproj.AssemblyReference.cache
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.AssemblyInfoInputs.cache
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.AssemblyInfo.cs
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.csproj.CoreCompileInputs.cache
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.sourcelink.json
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\staticwebassets\msbuild.CvApi2.Microsoft.AspNetCore.StaticWebAssets.props
@@ -196,5 +198,3 @@ C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.pdb
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.genruntimeconfig.cache
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\ref\CvApi2.dll
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250504163423_imagesAddedOnCv.cs
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250504163423_imagesAddedOnCv.Designer.cs

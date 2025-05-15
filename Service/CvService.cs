@@ -136,7 +136,7 @@ public class CvService : ICvService
                     Position = w.Position,
                     WorkExperienceDescription = w.WorkExperienceDescription,
                     From = w.StartDate,
-                    To = w.EndDate,
+                    To = w.EndDate ?? default,
                     Tags = w.Tags?.Select(t => t.Tag.Value).ToList() ?? new List<string>()
                 }).ToList() ?? new List<WorkExperienceDto>(),
 
@@ -189,7 +189,7 @@ public class CvService : ICvService
                     WorkExperienceDescription = w.WorkExperienceDescription,
                     Position = w.Position,
                     From = w.StartDate,
-                    To = w.EndDate,
+                    To = w.EndDate ?? default,
                     Tags = w.Tags?.Select(t => t.Tag.Value).ToList() ?? new List<string>()
                 }).ToList(),
 
@@ -297,7 +297,7 @@ public class CvService : ICvService
                     WorkExperienceDescription = w.WorkExperienceDescription,
                     Position = w.Position,
                     From = w.StartDate,
-                    To = w.EndDate,
+                    To = w.EndDate ?? default,
                     Tags = w.Tags?.Select(t => t.Tag.Value).ToList() ?? new List<string>()
                 }).ToList(),
 
@@ -375,15 +375,27 @@ public class CvService : ICvService
     {
         try
         {
-            _logger.LogInformation("Starter opprettelse av ny CV for bruker {UserId}", userId);
+            _logger.LogInformation("Oppretter ny CV for bruker {UserId}", userId);
+
+            // Samle unike tags først for ytelse
+            var allTagValues = (dto.WorkExperiences?.SelectMany(w => w.Tags ?? new List<string>()) ?? Enumerable.Empty<string>())
+                .Concat(dto.ProjectExperiences?.SelectMany(p => p.Tags ?? new List<string>()) ?? Enumerable.Empty<string>())
+                .Distinct();
+
+            var allTags = new Dictionary<string, Tag>();
+            foreach (var tagValue in allTagValues)
+            {
+                var tag = await GetOrCreateTagAsync(tagValue);
+                allTags[tagValue] = tag;
+            }
 
             var newCv = new Cv
             {
+                UserId = userId.ToLower(),
                 Personalia = dto.Personalia,
                 DateOfBirth = dto.DateOfBirth,
                 ProfileImageUrl = dto.ProfileImageUrl,
                 PhoneNumber = dto.PhoneNumber,
-                UserId = userId.ToLower(),
 
                 Educations = dto.Educations?.Select(e => new Education
                 {
@@ -405,16 +417,16 @@ public class CvService : ICvService
                 Certifications = dto.Certifications?.Select(c => new Certification
                 {
                     Name = c.Name,
-                    CertificationDescription = c.CertificationDescription,
                     IssuedBy = c.IssuedBy,
+                    CertificationDescription = c.CertificationDescription,
                     Date = c.Date
                 }).ToList() ?? new List<Certification>(),
 
                 Courses = dto.Courses?.Select(c => new Course
                 {
                     Name = c.Name,
-                    CourseDescription = c.CourseDescription,
                     Provider = c.Provider,
+                    CourseDescription = c.CourseDescription,
                     Date = c.CompletionDate
                 }).ToList() ?? new List<Course>(),
 
@@ -436,74 +448,39 @@ public class CvService : ICvService
                     RoleDescription = r.RoleDescription
                 }).ToList() ?? new List<RoleOverview>(),
 
-                WorkExperiences = new List<WorkExperience>(),
-                ProjectExperiences = new List<ProjectExperience>()
+                WorkExperiences = dto.WorkExperiences?.Select(w => new WorkExperience
+                {
+                    CompanyName = w.Company,
+                    Position = w.Position,
+                    WorkExperienceDescription = w.WorkExperienceDescription,
+                    StartDate = w.From,
+                    EndDate = w.To,
+                    Tags = w.Tags?.Where(tag => allTags.ContainsKey(tag)).Select(tag => new WorkExperienceTag
+                    {
+                        Tag = allTags[tag],
+                        TagId = allTags[tag].Id
+                    }).ToList() ?? new List<WorkExperienceTag>()
+                }).ToList() ?? new List<WorkExperience>(),
+
+                ProjectExperiences = dto.ProjectExperiences?.Select(p => new ProjectExperience
+                {
+                    ProjectName = p.ProjectName,
+                    CompanyName = p.CompanyName,
+                    ProjectExperienceDescription = p.ProjectExperienceDescription,
+                    Role = p.Role,
+                    StartDate = p.StartDate,
+                    EndDate = p.EndDate,
+                    Tags = p.Tags?.Where(tag => allTags.ContainsKey(tag)).Select(tag => new ProjectExperienceTag
+                    {
+                        Tag = allTags[tag],
+                        TagId = allTags[tag].Id
+                    }).ToList() ?? new List<ProjectExperienceTag>()
+                }).ToList() ?? new List<ProjectExperience>()
             };
 
-            if (dto.WorkExperiences != null)
-            {
-                _logger.LogDebug("Behandler {Count} arbeidserfaringer", dto.WorkExperiences.Count);
-                foreach (var w in dto.WorkExperiences)
-                {
-                    var work = new WorkExperience
-                    {
-                        CompanyName = w.Company,
-                        Position = w.Position,
-                        WorkExperienceDescription = w.WorkExperienceDescription,
-                        StartDate = w.From,
-                        EndDate = w.To,
-                        Tags = new List<WorkExperienceTag>()
-                    };
-
-                    foreach (var tagValue in w.Tags ?? new List<string>())
-                    {
-                        var tag = await GetOrCreateTagAsync(tagValue);
-                        work.Tags.Add(new WorkExperienceTag
-                        {
-                            Tag = tag,
-                            TagId = tag.Id
-                        });
-                    }
-
-                    newCv.WorkExperiences.Add(work);
-                }
-            }
-
-            if (dto.ProjectExperiences != null)
-            {
-                _logger.LogDebug("Behandler {Count} prosjektopplevelser", dto.ProjectExperiences.Count);
-                foreach (var p in dto.ProjectExperiences)
-                {
-                    var project = new ProjectExperience
-                    {
-                        ProjectName = p.ProjectName,
-                        CompanyName = p.CompanyName,
-                        ProjectExperienceDescription = p.ProjectExperienceDescription,
-                        Role = p.Role,
-                        StartDate = p.StartDate,
-                        EndDate = p.EndDate,
-                        Tags = new List<ProjectExperienceTag>()
-                    };
-
-                    foreach (var tagValue in p.Tags ?? new List<string>())
-                    {
-                        var tag = await GetOrCreateTagAsync(tagValue);
-                        project.Tags.Add(new ProjectExperienceTag
-                        {
-                            Tag = tag,
-                            TagId = tag.Id
-                        });
-                    }
-
-                    newCv.ProjectExperiences.Add(project);
-                }
-            }
-
-            _logger.LogInformation("Lagrer ny CV for bruker {UserId}", userId);
-            
             await _CvRepository.AddCv(newCv);
 
-            _logger.LogInformation("Ny CV opprettet med ID {CvId}", newCv.Id);
+            _logger.LogInformation("Ny CV opprettet med ID {CvId} for bruker {UserId}", newCv.Id, userId);
             return newCv;
         }
         catch (Exception ex)
@@ -514,11 +491,12 @@ public class CvService : ICvService
     }
 
 
+
     public async Task UpdateCvFromDto(Cv existingCv, UpdateCvDto dto)
     {
         try
         {
-            _logger.LogInformation("Starter oppdatering av CV-ID {CvId}", existingCv.Id);
+            _logger.LogInformation("🔄 Starter oppdatering av CV-ID {CvId}", existingCv.Id);
 
             if (dto.Personalia != null)
                 existingCv.Personalia = dto.Personalia;
@@ -532,6 +510,7 @@ public class CvService : ICvService
             if (dto.PhoneNumber != null)
                 existingCv.PhoneNumber = dto.PhoneNumber;
 
+            // Samle alle unike tags
             var allTags = new Dictionary<string, Tag>();
             var allTagValues = (dto.WorkExperiences?.SelectMany(w => w.Tags ?? new List<string>()) ?? Enumerable.Empty<string>())
                 .Concat(dto.ProjectExperiences?.SelectMany(p => p.Tags ?? new List<string>()) ?? Enumerable.Empty<string>())
@@ -543,97 +522,124 @@ public class CvService : ICvService
                 allTags[tagValue] = tag;
             }
 
-            existingCv.WorkExperiences = dto.WorkExperiences?.Select(w => new WorkExperience
+            if (dto.WorkExperiences != null)
             {
-                CompanyName = w.Company,
-                Position = w.Position,
-                WorkExperienceDescription = w.WorkExperienceDescription,
-                StartDate = w.From,
-                EndDate = w.To,
-                CvId = existingCv.Id,
-                Tags = w.Tags?.Select(tag => new WorkExperienceTag
+                existingCv.WorkExperiences = dto.WorkExperiences.Select(w => new WorkExperience
                 {
-                    TagId = allTags[tag].Id,
-                    Tag = allTags[tag]
-                }).ToList() ?? new List<WorkExperienceTag>()
-            }).ToList() ?? new List<WorkExperience>();
+                    CompanyName = w.Company,
+                    Position = w.Position,
+                    WorkExperienceDescription = w.WorkExperienceDescription,
+                    StartDate = w.From,
+                    EndDate = w.To,
+                    CvId = existingCv.Id,
+                    Tags = w.Tags?.Where(tag => allTags.ContainsKey(tag)).Select(tag => new WorkExperienceTag
+                    {
+                        TagId = allTags[tag].Id,
+                        Tag = allTags[tag]
+                    }).ToList() ?? new List<WorkExperienceTag>()
+                }).ToList();
+            }
 
-            existingCv.Educations = dto.Educations?.Select(e => new Education
+            if (dto.Educations != null)
             {
-                School = e.School,
-                Degree = e.Degree,
-                EducationDescription = e.EducationDescription,
-                StartDate = e.StartYear,
-                EndDate = e.EndYear,
-                CvId = existingCv.Id
-            }).ToList() ?? new List<Education>();
-
-            existingCv.Awards = dto.Awards?.Select(a => new Award
-            {
-                Name = a.Name,
-                AwardDescription = a.AwardDescription,
-                Organization = a.Organization,
-                Year = a.Year,
-                CvId = existingCv.Id
-            }).ToList() ?? new List<Award>();
-
-            existingCv.Certifications = dto.Certifications?.Select(c => new Certification
-            {
-                Name = c.Name,
-                IssuedBy = c.IssuedBy,
-                CertificationDescription = c.CertificationDescription,
-                Date = c.Date,
-                CvId = existingCv.Id
-            }).ToList() ?? new List<Certification>();
-
-            existingCv.Courses = dto.Courses?.Select(c => new Course
-            {
-                Name = c.Name,
-                Provider = c.Provider,
-                CourseDescription = c.CourseDescription,
-                Date = c.CompletionDate,
-                CvId = existingCv.Id
-            }).ToList() ?? new List<Course>();
-
-            existingCv.CompetenceOverviews = dto.CompetenceOverviews?.Select(c => new CompetenceOverview
-            {
-                skill_name = c.Area,
-                skill_level = c.Level,
-                CvId = existingCv.Id
-            }).ToList() ?? new List<CompetenceOverview>();
-
-            existingCv.Languages = dto.Languages?.Select(l => new Language
-            {
-                Name = l.Name,
-                Proficiency = l.Proficiency,
-                CvId = existingCv.Id
-            }).ToList() ?? new List<Language>();
-
-            existingCv.ProjectExperiences = dto.ProjectExperiences?.Select(p => new ProjectExperience
-            {
-                ProjectName = p.ProjectName,
-                ProjectExperienceDescription = p.ProjectExperienceDescription,
-                CompanyName = p.CompanyName,
-                Role = p.Role,
-                StartDate = p.StartDate,
-                EndDate = p.EndDate,
-                CvId = existingCv.Id,
-                Tags = p.Tags?.Select(tag => new ProjectExperienceTag
+                existingCv.Educations = dto.Educations.Select(e => new Education
                 {
-                    TagId = allTags[tag].Id,
-                    Tag = allTags[tag]
-                }).ToList() ?? new List<ProjectExperienceTag>()
-            }).ToList() ?? new List<ProjectExperience>();
+                    School = e.School,
+                    Degree = e.Degree,
+                    EducationDescription = e.EducationDescription,
+                    StartDate = e.StartYear,
+                    EndDate = e.EndYear,
+                    CvId = existingCv.Id
+                }).ToList();
+            }
 
-            existingCv.RoleOverviews = dto.RoleOverviews?.Select(r => new RoleOverview
+            if (dto.Awards != null)
             {
-                Role = r.Role,
-                RoleDescription = r.RoleDescription,
-                CvId = existingCv.Id
-            }).ToList() ?? new List<RoleOverview>();
+                existingCv.Awards = dto.Awards.Select(a => new Award
+                {
+                    Name = a.Name,
+                    AwardDescription = a.AwardDescription,
+                    Organization = a.Organization,
+                    Year = a.Year,
+                    CvId = existingCv.Id
+                }).ToList();
+            }
+
+            if (dto.Certifications != null)
+            {
+                existingCv.Certifications = dto.Certifications.Select(c => new Certification
+                {
+                    Name = c.Name,
+                    IssuedBy = c.IssuedBy,
+                    CertificationDescription = c.CertificationDescription,
+                    Date = c.Date,
+                    CvId = existingCv.Id
+                }).ToList();
+            }
+
+            if (dto.Courses != null)
+            {
+                existingCv.Courses = dto.Courses.Select(c => new Course
+                {
+                    Name = c.Name,
+                    Provider = c.Provider,
+                    CourseDescription = c.CourseDescription,
+                    Date = c.CompletionDate,
+                    CvId = existingCv.Id
+                }).ToList();
+            }
+
+            if (dto.CompetenceOverviews != null)
+            {
+                existingCv.CompetenceOverviews = dto.CompetenceOverviews.Select(c => new CompetenceOverview
+                {
+                    skill_name = c.Area,
+                    skill_level = c.Level,
+                    CvId = existingCv.Id
+                }).ToList();
+            }
+
+            if (dto.Languages != null)
+            {
+                existingCv.Languages = dto.Languages.Select(l => new Language
+                {
+                    Name = l.Name,
+                    Proficiency = l.Proficiency,
+                    CvId = existingCv.Id
+                }).ToList();
+            }
+
+            if (dto.ProjectExperiences != null)
+            {
+                existingCv.ProjectExperiences = dto.ProjectExperiences.Select(p => new ProjectExperience
+                {
+                    ProjectName = p.ProjectName,
+                    ProjectExperienceDescription = p.ProjectExperienceDescription,
+                    CompanyName = p.CompanyName,
+                    Role = p.Role,
+                    StartDate = p.StartDate,
+                    EndDate = p.EndDate,
+                    CvId = existingCv.Id,
+                    Tags = p.Tags?.Where(tag => allTags.ContainsKey(tag)).Select(tag => new ProjectExperienceTag
+                    {
+                        TagId = allTags[tag].Id,
+                        Tag = allTags[tag]
+                    }).ToList() ?? new List<ProjectExperienceTag>()
+                }).ToList();
+            }
+
+            if (dto.RoleOverviews != null)
+            {
+                existingCv.RoleOverviews = dto.RoleOverviews.Select(r => new RoleOverview
+                {
+                    Role = r.Role,
+                    RoleDescription = r.RoleDescription,
+                    CvId = existingCv.Id
+                }).ToList();
+            }
 
             await _CvRepository.UpdateCv(existingCv);
-            
+
             _logger.LogInformation("✅ CV-ID {CvId} ble oppdatert", existingCv.Id);
         }
         catch (Exception ex)
@@ -671,7 +677,7 @@ public class CvService : ICvService
                     Tags = w.Tags?.Select(t => t.Tag.Value).ToList() ?? new List<string>(),
                     Position = w.Position,
                     From = w.StartDate,
-                    To = w.EndDate
+                    To = w.EndDate ?? default
                 }).ToList(),
 
                 Educations = cv.Educations?.Select(e => new EducationDto
