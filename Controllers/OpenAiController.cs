@@ -90,12 +90,12 @@ public class OpenAIController : ControllerBase
         }
     }
 
-    [HttpPost("evaluate-candidate/{cvId}")]
-    public async Task<IActionResult> EvaluateCandidate(string cvId, [FromBody] string requirements)
+    [HttpPost("MatrixRequirements/{cvId}")]
+    public async Task<IActionResult> MatrixRequirements(string cvId, [FromBody] string requirements)
     {
         try
         {
-            var evaluation = await _promptService.EvaluateCandidateAsync(cvId, requirements);
+            var evaluation = await _promptService.MatrixRequirementAsync(cvId, requirements);
 
             if (evaluation == null)
                 return NotFound(ApiResponse<string>.Fail("CV ikke funnet for evaluering."));

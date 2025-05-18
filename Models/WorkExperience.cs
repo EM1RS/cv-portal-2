@@ -2,8 +2,8 @@ namespace CvAPI2.Models
 {
     public class WorkExperience
     {
-        public int Id { get; set; }
-        public required string CompanyName { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString(); 
+        public string CompanyName { get; set; }
         public string WorkExperienceDescription { get; set; }
         public required string Position { get; set; }
         public DateTime StartDate { get; set; }

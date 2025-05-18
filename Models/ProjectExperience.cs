@@ -3,10 +3,10 @@ namespace CvAPI2.Models
     public class ProjectExperience
 
     {
-        public int Id { get; set;}
+        public string Id { get; set;} = Guid.NewGuid().ToString();
         public string? ProjectName { get; set; }
 
-        public string? CompanyName { get; set;}
+        public required string CompanyName { get; set;}
 
         public string? ProjectExperienceDescription { get; set; }
 

@@ -1,21 +1,28 @@
 using Amazon.S3;
 using Amazon.S3.Model;
+using Amazon;
+using Microsoft.Extensions.Options;
+using CvAPI2.Models;
 
 namespace CvApi2.Service
-{    
+{
     public class S3Service
     {
         private readonly IAmazonS3 _s3Client;
         private readonly string _bucket;
 
-        public S3Service(IConfiguration config)
+        public S3Service(IOptions<AwsSettings> options)
         {
-            _bucket = config["AWS:Bucket"];
-            _s3Client = new AmazonS3Client(
-                config["AWS:AccessKey"],
-                config["AWS:SecretKey"],
-                Amazon.RegionEndpoint.GetBySystemName(config["AWS:Region"])
-            );
+            var settings = options.Value;
+
+            _bucket = settings.BucketName;
+
+            var config = new AmazonS3Config
+            {
+                RegionEndpoint = RegionEndpoint.GetBySystemName(settings.Region)
+            };
+
+            _s3Client = new AmazonS3Client(settings.AccessKey, settings.SecretKey, config);
         }
 
         public async Task<string> UploadAsync(IFormFile file, string key)

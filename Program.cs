@@ -9,19 +9,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using QuestPDF.Infrastructure;
-using Amazon.Extensions.NETCore.Setup;
 using CvApi2.Service;
 
 
 
 var builder = WebApplication.CreateBuilder(args);
-//builder.WebHost.UseUrls("http://localhost:5005");
-//builder.WebHost.UseUrls("http://+:80");
 
 builder.WebHost.UseUrls("http://0.0.0.0:80");
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -54,6 +50,14 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new NullableDateTimeConverter());
+    });
+
+
 
 builder.Services.Configure<OpenAiSettings>(options =>
 {
@@ -127,14 +131,15 @@ builder.Services.AddCors(options =>
 });
 builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddJsonFile("appsettings.json");
+builder.Services.Configure<AwsSettings>(options =>
+{
+    options.AccessKey = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY") ?? "";
+    options.SecretKey = Environment.GetEnvironmentVariable("AWS_SECRET_KEY") ?? "";
+    options.Region = Environment.GetEnvironmentVariable("AWS_REGION") ?? "eu-north-1";
+    options.BucketName = Environment.GetEnvironmentVariable("AWS_BUCKET") ?? "";
+});
 
-// builder.Services.AddDbContext<CvDbContext>(options =>
-// {
-//     options.UseMySql(
-//         builder.Configuration.GetConnectionString("DefaultConnection"),
-//         new MySqlServerVersion(new Version(8, 0, 42))
-//     );
-// });
+
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var envConn = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");

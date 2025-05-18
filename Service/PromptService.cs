@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using CvAPI2.Models;
 using Microsoft.Extensions.Options;
@@ -22,15 +23,12 @@ public class PromptService : IPromptService
         try
         {
             var prompt = $@"
-            Create a concise and professional summary based on this CV.
-            Do not include any personal information. Focus on education, work experience, projects, skills, languages, and tags.
-            The summary should be divided into two parts:
-                1. Summary of education and work experience.
-                2. Summary of projects, courses, certifications, awards, and competence overview. 
-                Jeg vil ha norsk oppsummering / output.
+            Lag en profesjonell og helhetlig tekstbasert oppsummering (maks 2 avsnitt). Start alltid med kandidatens prosjekt­erfaring. 
+            Utdanning og arbeidserfaring nevnes kun som støtte. Unngå punktlister. Ikke inkluder personlige opplysninger. Prosjekt datoer er viktig.
+
 
             CV-data:
-            {JsonSerializer.Serialize(cv, new JsonSerializerOptions { WriteIndented = true })}
+            {BuildCvSummaryForAI(cv)}
             ";
 
             var requestBody = new
@@ -101,7 +99,7 @@ public class PromptService : IPromptService
             _logger.LogWarning("Ingen CV funnet med ID: {cvId}", cvId);
             return null;
         }
-        var cvForAI = MapCvToCvForAI(cv); 
+        var cvForAI = MapCvToCvForAI(cv);
         var summary = await GenerateSummaryAsync(cvForAI);
 
         if (save)
@@ -120,11 +118,11 @@ public class PromptService : IPromptService
             WorkExperiences = cv.WorkExperiences?.Select(w => new WorkExperienceDto
             {
                 WorkExperienceDescription = w.WorkExperienceDescription,
-                Company = w.CompanyName,
+                CompanyName = w.CompanyName,
                 Position = w.Position,
                 From = w.StartDate,
                 To = w.EndDate ?? default,
-               Tags = w.Tags?.Select(t => t.Tag.Value).ToList() ?? new List<string>()
+                Tags = w.Tags?.Select(t => t.Tag.Value).ToList() ?? new List<string>()
             }).ToList() ?? new List<WorkExperienceDto>(),
 
 
@@ -135,7 +133,7 @@ public class PromptService : IPromptService
                 ProjectExperienceDescription = p.ProjectExperienceDescription,
                 StartDate = p.StartDate,
                 EndDate = p.EndDate,
-                Tags = p.Tags?.Select(t => t.Tag.Value).ToList() ?? new List<string>()
+                Tags = p.Tags?.Select(t => t.Tag.Value).ToList() ?? new List<string>() 
             }).ToList() ?? new List<ProjectExperienceDto>(),
 
 
@@ -143,6 +141,7 @@ public class PromptService : IPromptService
             {
                 Degree = e.Degree,
                 School = e.School,
+                StudyName = e.StudyName,
                 EducationDescription = e.EducationDescription,
                 StartYear = e.StartDate,
                 EndYear = e.EndDate
@@ -176,7 +175,7 @@ public class PromptService : IPromptService
             {
                 Area = co.skill_name,
                 Level = co.skill_level,
-                
+
             }).ToList() ?? new List<CompetenceOverviewDto>(),
 
             Languages = cv.Languages?.Select(l => new LanguageDto
@@ -204,53 +203,49 @@ public class PromptService : IPromptService
         await _cvRepository.DeleteSummaryAsync(summaryId);
     }
 
-    public async Task<string> EvaluateCandidateAsync(string cvId, string requirements)
+    public async Task<string> MatrixRequirementAsync(string cvId, string requirements)
     {
         var cv = await _cvRepository.GetCvById(cvId);
-            if (cv == null)
-            {
-                _logger.LogWarning("Ingen CV funnet med ID {CvId} ved evaluering", cvId);
-                return null;
-            }
+        if (cv == null)
+        {
+            _logger.LogWarning("Ingen CV funnet med ID {CvId} ved evaluering", cvId);
+            return null;
+        }
 
         var cvForAi = MapCvToCvForAI(cv);
 
         var prompt = $@"
-            Here is a list of competency requirements, followed by a CV text.
-            Jeg har følgende krav:
-            {requirements}
+        Her er en liste med kompetansekrav fra en kunde, etterfulgt av en CV.
 
-            For each requirement:
-            - Read the CV text carefully.
-            - Assess whether the requirement is fulfilled based on the information in the CV.
-            - Write the answer directly below each requirement.
+        🟨 For hvert krav:
+        - Bruk primært informasjon fra prosjektdelen i CV-en.
+        - Dersom et prosjekt dekker kravet, MÅ svaret inneholde:
+        • Prosjektets navn (hvis tilgjengelig)
+        • Fra- og til-dato i format: (MM–YYYY til MM–YYYY)
+        • En kort forklaring på hva teknologien/metoden ble brukt til i prosjektet.
+        - Hvis det ikke finnes relevant prosjekt, bruk annen erfaring og merk det tydelig.
 
-            For hver krav i listen:
-            - Les gjennom CV-teksten nøye.
-            - Vurder om kravet er oppfylt basert på informasjonen i CV-en.
-            - Skriv svaret rett under hvert krav.
+        📌 Format:
+        1. Skriv kravet (på egen linje)
+        2. Svar: Ja / Nei / Delvis
+        3. Forklaring på 1–3 linjer: HVA ble gjort og HVORDAN teknologien/metoden ble brukt. Nevne prosjekt og periode.
 
-            Answer format:
-            - Start each answer with: 'Svar: Ja', 'Svar: Nei' or 'Svar: Delvis'
-            - Provide a short explanation (1–2 sentences)
-            - If the answer is based on a specific job or project, you MUST include the period in this format: (YYYY–YYYY)
-            - Do NOT add summaries, headings or any extra text
-            - Respond in the exact same order as the requirements are listed
-            - The response MUST be written in Norwegian
+        🛑 Ikke inkluder overskrifter, punktlister eller summeringer. Bare:  
+        krav  
+        Svar: …  
+        Forklaring
 
-            Eksempel:
-            React.js  
-            Svar: Ja, brukt i prosjekt for Helsedirektoratet (2016–2017) hos Bouvet som Frontend-utvikler.
+        Krav:
+        {requirements}
 
-            Bare krav -> svar -> krav -> svar, slik at det kan kopieres rett inn i en tabell.
+        CV:
+        {cvForAi.GetSummary()}
+        ";
 
-            Kandidat:
-            {cvForAi.GetSummary()}
-            ";
 
         var requestBody = new
         {
-            model = "gpt-3.5-turbo",
+            model = "gpt-4-turbo",
             messages = new[]
             {
                 new { role = "system", content = "Du er en profesjonell rekrutterer." },
@@ -280,6 +275,64 @@ public class PromptService : IPromptService
 
         return evaluationResult ?? "Ukjent svar.";
     }
+
+    private string BuildCvSummaryForAI(CvForAI cv)
+    {
+        var sb = new StringBuilder();
+
+        // 1. Prosjekter (viktigst)
+        sb.AppendLine("🧠 Prosjekter:");
+        foreach (var p in cv.ProjectExperiences ?? new List<ProjectExperienceDto>())
+        {
+            var from = p.StartDate.Year.ToString();
+            var to = p.EndDate.Year.ToString();
+            var period = $"({from}–{to})";
+            sb.AppendLine($"Prosjekt: {p.ProjectName} {period}");
+
+            sb.AppendLine($"Prosjekt: {p.ProjectName} {period}");
+            if (!string.IsNullOrWhiteSpace(p.Role))
+                sb.AppendLine($"Rolle: {p.Role}");
+            if (p.Tags?.Any() == true)
+                sb.AppendLine($"Teknologier: {string.Join(", ", p.Tags)}");
+            if (!string.IsNullOrWhiteSpace(p.ProjectExperienceDescription))
+                sb.AppendLine($"Beskrivelse: {p.ProjectExperienceDescription}");
+            sb.AppendLine();
+        }
+
+        // 2. Arbeidserfaring (støtte)
+        sb.AppendLine("👔 Arbeidserfaring:");
+        foreach (var w in cv.WorkExperiences ?? new List<WorkExperienceDto>())
+        {
+            var from = w.From.Year.ToString() ?? "?";
+            var to = w.To?.Year.ToString() ?? "?";
+            var period = $"({from}–{to})";
+            
+
+            sb.AppendLine($"Stilling: {w.Position} hos {w.CompanyName} {period}");
+            if (!string.IsNullOrWhiteSpace(w.WorkExperienceDescription))
+                sb.AppendLine($"Beskrivelse: {w.WorkExperienceDescription}");
+            if (w.Tags?.Any() == true)
+                sb.AppendLine($"Ferdigheter: {string.Join(", ", w.Tags)}");
+            sb.AppendLine();
+        }
+
+        // 3. Utdanning
+        sb.AppendLine("🎓 Utdanning:");
+        foreach (var e in cv.Educations ?? new List<EducationDto>())
+        {
+            var from = e.StartYear.Year.ToString() ?? "?";
+            var to = e.EndYear.Year.ToString() ?? "?";
+            var period = $"({from}–{to})";
+
+            sb.AppendLine($"Studium: {e.Degree} ved {e.School} {period}");
+            if (!string.IsNullOrWhiteSpace(e.EducationDescription))
+                sb.AppendLine($"Beskrivelse: {e.EducationDescription}");
+            sb.AppendLine();
+        }
+
+        return sb.ToString();
+    }
+
 
 
 }

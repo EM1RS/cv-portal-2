@@ -21,7 +21,7 @@ namespace CvAPI2.Models
             // Erfaring
             if (WorkExperiences != null && WorkExperiences.Any())
             {
-                var workExp = string.Join(", ", WorkExperiences.Select(w => w.Position + " hos " + w.Company));
+                var workExp = string.Join(", ", WorkExperiences.Select(w => w.Position + " hos " + w.CompanyName));
                 summaryParts.Add($"Erfaring: {workExp}.");
             }
 

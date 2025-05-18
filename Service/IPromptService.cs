@@ -8,7 +8,7 @@ namespace CvAPI2.Models
         Task<string?> GenerateAndOptionallySaveSummaryAsync(string cvId, bool save);
         Task<CvSummary?> GetSummaryByIdAsync(string cvId);
         Task DeleteSummaryAsync(string summaryId);
-        Task<string?> EvaluateCandidateAsync(string cvId, string requirements);
+        Task<string?> MatrixRequirementAsync(string cvId, string requirements);
     }
 
 }

@@ -20,9 +20,8 @@ namespace CvApi2.Migrations
 
             modelBuilder.Entity("Course", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CourseDescription")
                         .IsRequired()
@@ -51,9 +50,8 @@ namespace CvApi2.Migrations
 
             modelBuilder.Entity("CvAPI2.Models.Award", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("AwardDescription")
                         .IsRequired()
@@ -82,9 +80,8 @@ namespace CvApi2.Migrations
 
             modelBuilder.Entity("CvAPI2.Models.Certification", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CertificationDescription")
                         .IsRequired()
@@ -113,9 +110,8 @@ namespace CvApi2.Migrations
 
             modelBuilder.Entity("CvAPI2.Models.CompetenceOverview", b =>
                 {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CvId")
                         .HasColumnType("varchar(255)");
@@ -126,7 +122,7 @@ namespace CvApi2.Migrations
                     b.Property<string>("skill_name")
                         .HasColumnType("longtext");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.HasIndex("CvId");
 
@@ -192,9 +188,8 @@ namespace CvApi2.Migrations
 
             modelBuilder.Entity("CvAPI2.Models.Education", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CvId")
                         .HasColumnType("varchar(255)");
@@ -215,6 +210,9 @@ namespace CvApi2.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("StudyName")
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CvId");
@@ -224,9 +222,8 @@ namespace CvApi2.Migrations
 
             modelBuilder.Entity("CvAPI2.Models.Language", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CvId")
                         .HasColumnType("varchar(255)");
@@ -248,11 +245,11 @@ namespace CvApi2.Migrations
 
             modelBuilder.Entity("CvAPI2.Models.ProjectExperience", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CompanyName")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("CvId")
@@ -308,9 +305,8 @@ namespace CvApi2.Migrations
 
             modelBuilder.Entity("CvAPI2.Models.RoleOverview", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CvId")
                         .HasColumnType("varchar(255)");
@@ -330,9 +326,8 @@ namespace CvApi2.Migrations
 
             modelBuilder.Entity("CvAPI2.Models.Tag.Tag", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Value")
                         .IsRequired()
@@ -418,9 +413,8 @@ namespace CvApi2.Migrations
 
             modelBuilder.Entity("CvAPI2.Models.WorkExperience", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CompanyName")
                         .IsRequired()
@@ -429,7 +423,7 @@ namespace CvApi2.Migrations
                     b.Property<string>("CvId")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Position")
@@ -554,11 +548,11 @@ namespace CvApi2.Migrations
 
             modelBuilder.Entity("ProjectExperienceTag", b =>
                 {
-                    b.Property<int>("ProjectExperienceId")
-                        .HasColumnType("int");
+                    b.Property<string>("ProjectExperienceId")
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<int>("TagId")
-                        .HasColumnType("int");
+                    b.Property<string>("TagId")
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("ProjectExperienceId", "TagId");
 
@@ -569,11 +563,11 @@ namespace CvApi2.Migrations
 
             modelBuilder.Entity("WorkExperienceTag", b =>
                 {
-                    b.Property<int>("WorkExperienceId")
-                        .HasColumnType("int");
+                    b.Property<string>("WorkExperienceId")
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<int>("TagId")
-                        .HasColumnType("int");
+                    b.Property<string>("TagId")
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("WorkExperienceId", "TagId");
 

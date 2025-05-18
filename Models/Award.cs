@@ -2,7 +2,7 @@ namespace CvAPI2.Models
 {
     public class Award
     {
-        public int Id { get; set; }
+        public string  Id { get; set; } = Guid.NewGuid().ToString();
         public string Name { get; set; } = string.Empty;
         public string Organization { get; set; } = string.Empty;
         public string AwardDescription { get; set; }

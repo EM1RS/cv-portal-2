@@ -2,6 +2,7 @@ public class EducationDto
 {
     public string School { get; set; } = string.Empty;
     public string Degree { get; set; } = string.Empty;
+    public string? StudyName { get; set; }
     public string EducationDescription { get; set; } = string.Empty;
     public DateTime StartYear { get; set; }
     public DateTime EndYear { get; set; }
@@ -9,11 +10,11 @@ public class EducationDto
 
 public class WorkExperienceDto
 {
-    public string Company { get; set; } = string.Empty;
+    public string CompanyName { get; set; } = string.Empty;
     public string Position { get; set; } = string.Empty;
     public string WorkExperienceDescription { get; set; } = string.Empty;
     public DateTime From { get; set; }
-    public DateTime To { get; set; }
+    public DateTime? To { get; set; }
     public List<string> Tags { get; set; } = new();
 }
 
@@ -54,7 +55,7 @@ public class LanguageDto
 public class ProjectExperienceDto
 {
     public string ProjectName { get; set; } = string.Empty;
-    public string CompanyName { get; set; } = string.Empty;
+    public required string CompanyName { get; set; }
     public string ProjectExperienceDescription { get; set; } = string.Empty;
     public string Role { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }

@@ -3,9 +3,9 @@ using CvAPI2.Models.Tag;
 
 public class WorkExperienceTag
 {
-    public int WorkExperienceId { get; set; }
+    public string WorkExperienceId { get; set; } = Guid.NewGuid().ToString();
     public WorkExperience WorkExperience { get; set; } = null!;
 
-    public int TagId { get; set; }
+    public string TagId { get; set; } = Guid.NewGuid().ToString();
     public Tag Tag { get; set; } = null!;
 }

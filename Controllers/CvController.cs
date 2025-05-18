@@ -94,14 +94,14 @@ public class CvController : ControllerBase
 
     [Authorize]
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateCv(string id, [FromBody] UpdateCvDto dtoUpdateCv)
+    public async Task<IActionResult> UpdateCv(string id, [FromBody] UpdateCvDto dto)
     {
         try
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var isAdmin = User.IsInRole("Admin");
 
-            var existingCv = await _cvService.GetCvById(id); // 🔁 Viktig endring
+            var existingCv = await _cvService.GetCvById(id);
 
             if (existingCv == null)
             {
@@ -118,7 +118,7 @@ public class CvController : ControllerBase
                 });
             }
 
-            await _cvService.UpdateCvFromDto(existingCv, dtoUpdateCv);
+            await _cvService.UpdateCvFromDto(existingCv, dto);
 
             _logger.LogInformation("CV med ID {CvId} oppdatert av bruker {UserId}", id, userId);
             return NoContent();

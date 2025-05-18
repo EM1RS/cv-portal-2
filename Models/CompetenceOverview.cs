@@ -2,7 +2,7 @@ namespace CvAPI2.Models
 { 
     public class CompetenceOverview
     {
-        public int id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string? skill_name { get; set; }
         public string? skill_level {get; set; }
    	    public string? CvId { get; set; }           // Fremmednøkkel
