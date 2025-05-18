@@ -17,31 +17,56 @@ public class CvPdfController : ControllerBase
         _cvService = cvService;
     }
 
-    [HttpGet("{cvId}")]
-    public async Task<IActionResult> GetPdf(string cvId)
+    [HttpPost("{cvId}")]
+    public async Task<IActionResult> GetPdf(string cvId, [FromBody] CvPdfOptions request)
     {
         var cv = await _cvService.GetCvById(cvId);
-
         if (cv == null)
             return NotFound("CV not found");
 
+        // Filter experiences based on selected IDs
+        if (request.WorkExperienceIds?.Any() == true)
+        {
+            cv.WorkExperiences = cv.WorkExperiences
+                .Where(w => request.WorkExperienceIds.Contains(w.Id))
+                .ToList();
+        }
+        else
+        {
+            cv.WorkExperiences = new List<WorkExperience>();
+        }
+
+        if (request.ProjectExperienceIds?.Any() == true)
+        {
+            cv.ProjectExperiences = cv.ProjectExperiences
+                .Where(p => request.ProjectExperienceIds.Contains(p.Id))
+                .ToList();
+        }
+        else
+        {
+            cv.ProjectExperiences = new List<ProjectExperience>();
+        }
+
+        // Lag ny options, resten kommer som bools
         var options = new CvPdfOptions
         {
-                IncludeEducations = true,
-                IncludeWorkExperiences = true,
-                IncludeProjectExperiences = true,
-                IncludeLanguages = true,
-                IncludeRoleOverviews = true,
-                IncludeCourses = true,
-                IncludeCertifications = true,
-                IncludeCompetenceOverviews = true,
-                IncludeAwards = true
-            };
+            IncludeEducations = request.IncludeEducations,
+            IncludeLanguages = request.IncludeLanguages,
+            IncludeRoleOverviews = request.IncludeRoleOverviews,
+            IncludeCourses = request.IncludeCourses,
+            IncludeCertifications = request.IncludeCertifications,
+            IncludeCompetenceOverviews = request.IncludeCompetenceOverviews,
+            IncludeAwards = request.IncludeAwards,
 
-            var document = new CvPdfDocument(cv, options);
+            // Disse sender vi med som tom liste (vi har allerede filtrert over)
+            WorkExperienceIds = request.WorkExperienceIds,
+            ProjectExperienceIds = request.ProjectExperienceIds
+        };
 
-        byte[] pdfBytes = document.GeneratePdf();
+        var document = new CvPdfDocument(cv, options);
+        var pdfBytes = document.GeneratePdf();
 
-        return File(pdfBytes, "application/pdf", $"CV_{cv.User.FullName ?? "user"}.pdf");
+        return File(pdfBytes, "application/pdf", $"CV_{cv.User?.FullName ?? "user"}.pdf");
     }
+
 }

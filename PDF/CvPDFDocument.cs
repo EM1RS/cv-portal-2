@@ -39,8 +39,8 @@ public class CvPdfDocument : IDocument
                 col.Item().Text(_cv.Personalia).FontSize(12);
 
                 if (_options.IncludeEducations) col.Item().Element(ComposeEducation);
-                if (_options.IncludeWorkExperiences) col.Item().Element(ComposeWorkExperience);
-                if (_options.IncludeProjectExperiences) col.Item().Element(ComposeProjectExperiences);
+                if (_options.WorkExperienceIds?.Any() ==true) col.Item().Element(ComposeWorkExperience);
+                if (_options.ProjectExperienceIds?.Any() == true) col.Item().Element(ComposeProjectExperiences);
                 if (_options.IncludeLanguages) col.Item().Element(ComposeLanguages);
                 if (_options.IncludeRoleOverviews) col.Item().Element(ComposeRoleOverviews);
                 if (_options.IncludeCourses) col.Item().Element(ComposeCourses);
@@ -57,7 +57,7 @@ public class CvPdfDocument : IDocument
     void ComposeEducation(IContainer container) =>
         container.Column(col =>
         {
-            col.Item().Text("Utdanning").FontSize(16).Bold().Underline();
+            col.Item().Text("Educations").FontSize(16).Bold().Underline();
             foreach (var edu in _cv.Educations)
             {
                 col.Item().Text($"{edu.Degree} ved {edu.School} ({edu.StartDate:yyyy} - {edu.EndDate:yyyy})").FontSize(12);
@@ -67,8 +67,8 @@ public class CvPdfDocument : IDocument
     void ComposeWorkExperience(IContainer container) =>
         container.Column(col =>
         {
-            col.Item().Text("Arbeidserfaring").FontSize(16).Bold().Underline();
-            foreach (var job in _cv.WorkExperiences)
+            col.Item().Text("WorkExperiences").FontSize(16).Bold().Underline();
+            foreach (var job in _cv.WorkExperiences.Where(w => _options.WorkExperienceIds.Contains(w.Id) == true))
             {
                 var period = $"{job.StartDate:yyyy} - {job.EndDate?.ToString("yyyy") ?? "nå"}";
                 col.Item().Text($"{job.Position} hos {job.CompanyName} ({period})").FontSize(12).Bold();
@@ -81,13 +81,12 @@ public class CvPdfDocument : IDocument
     void ComposeProjectExperiences(IContainer container) =>
         container.Column(col =>
         {
-            col.Item().Text("Prosjekter").FontSize(16).Bold().Underline();
-            foreach (var proj in _cv.ProjectExperiences)
+            col.Item().Text("ProjectExperiences").FontSize(16).Bold().Underline();
+            foreach (var proj in _cv.ProjectExperiences.Where(p => _options.ProjectExperienceIds.Contains(p.Id) == true))
             {
                 var period = $"{proj.StartDate:yyyy} - {proj.EndDate.ToString("yyyy") ?? "nå"}";
-                col.Item().Text($"{proj.ProjectName} ({proj.CompanyName})").FontSize(12).Bold();
+                col.Item().Text($"{proj.ProjectName} ({period})").FontSize(12).Bold();
                 col.Item().Text(proj.ProjectExperienceDescription).FontSize(11);
-                col.Item().Text($"Periode: {period}").FontSize(10);
                 if (proj.Tags.Any())
                     col.Item().Text("Tags: " + string.Join(", ", proj.Tags.Select(t => t.Tag.Value))).FontSize(10).Italic().FontColor(Colors.Grey.Darken1);
             }
@@ -96,7 +95,7 @@ public class CvPdfDocument : IDocument
     void ComposeLanguages(IContainer container) =>
         container.Column(col =>
         {
-            col.Item().Text("Språk").FontSize(16).Bold().Underline();
+            col.Item().Text("Languages").FontSize(16).Bold().Underline();
             foreach (var lang in _cv.Languages)
                 col.Item().Text($"{lang.Name} – {lang.Proficiency}").FontSize(11);
         });
@@ -104,7 +103,7 @@ public class CvPdfDocument : IDocument
     void ComposeRoleOverviews(IContainer container) =>
         container.Column(col =>
         {
-            col.Item().Text("Rolleoversikter").FontSize(16).Bold().Underline();
+            col.Item().Text("RoleOverviews").FontSize(16).Bold().Underline();
             foreach (var role in _cv.RoleOverviews)
                 col.Item().Text($"{role.Role}: {role.RoleDescription}").FontSize(11);
         });
@@ -112,7 +111,7 @@ public class CvPdfDocument : IDocument
     void ComposeCourses(IContainer container) =>
         container.Column(col =>
         {
-            col.Item().Text("Kurs").FontSize(16).Bold().Underline();
+            col.Item().Text("Courses").FontSize(16).Bold().Underline();
             foreach (var c in _cv.Courses)
                 col.Item().Text($"{c.Name} ({c.Provider}, {c.Date:yyyy}): {c.CourseDescription}").FontSize(11);
         });
@@ -120,7 +119,7 @@ public class CvPdfDocument : IDocument
     void ComposeCertifications(IContainer container) =>
         container.Column(col =>
         {
-            col.Item().Text("Sertifiseringer").FontSize(16).Bold().Underline();
+            col.Item().Text("Certifications").FontSize(16).Bold().Underline();
             foreach (var c in _cv.Certifications)
                 col.Item().Text($"{c.Name} fra {c.IssuedBy} ({c.Date:yyyy}): {c.CertificationDescription}").FontSize(11);
         });
@@ -128,7 +127,7 @@ public class CvPdfDocument : IDocument
     void ComposeCompetenceOverviews(IContainer container) =>
         container.Column(col =>
         {
-            col.Item().Text("Kompetanser").FontSize(16).Bold().Underline();
+            col.Item().Text("CompetenceOverviews").FontSize(16).Bold().Underline();
             foreach (var c in _cv.CompetenceOverviews)
                 col.Item().Text($"{c.skill_name}: {c.skill_level}").FontSize(11);
         });
@@ -136,7 +135,7 @@ public class CvPdfDocument : IDocument
     void ComposeAwards(IContainer container) =>
         container.Column(col =>
         {
-            col.Item().Text("Priser og utmerkelser").FontSize(16).Bold().Underline();
+            col.Item().Text("Awards").FontSize(16).Bold().Underline();
             foreach (var a in _cv.Awards)
                 col.Item().Text($"{a.Name} – {a.Organization} ({a.Year}): {a.AwardDescription}").FontSize(11);
         });

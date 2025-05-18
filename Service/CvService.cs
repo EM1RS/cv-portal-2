@@ -409,6 +409,13 @@ public class CvService : ICvService
         {
             _logger.LogInformation("Oppretter ny CV for bruker {UserId}", userId);
 
+            var existingCv = await _CvRepository.GetCvByUserId(userId);
+            if (existingCv != null)
+            {
+                _logger.LogWarning("Bruker {UserId} har allerede en CV med ID {CvId}", userId, existingCv.Id);
+                throw new InvalidOperationException("Brukeren har allerede en CV.");
+            }
+
             // Samle unike tags først for ytelse
             var allTagValues = (dto.WorkExperiences?.SelectMany(w => w.Tags ?? new List<string>()) ?? Enumerable.Empty<string>())
                 .Concat(dto.ProjectExperiences?.SelectMany(p => p.Tags ?? new List<string>()) ?? Enumerable.Empty<string>())

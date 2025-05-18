@@ -66,7 +66,7 @@ public class CvController : ControllerBase
 
     [Authorize(Roles = "User, Admin")]
     [HttpPost]
-    public async Task<IActionResult> CreateCv([FromBody] CreateCvDto dtoCreate)
+    public async Task<IActionResult> CreateCv([FromBody] CreateCvDto dto)
     {
         try
         {
@@ -77,10 +77,17 @@ public class CvController : ControllerBase
                 return Unauthorized("Ingen bruker identifisert.");
             }
 
-            var newCv = await _cvService.CreateCvFromDto(userId, dtoCreate);
+            var existingCv = await _cvService.GetCvForUser(userId);
+            if (existingCv != null)
+            {
+                _logger.LogInformation("Bruker {UserId} har allerede en CV med ID {CvId}", userId, existingCv.Id);
+                return BadRequest("Du har allerede en CV.");
+            }
+
+            var newCv = await _cvService.CreateCvFromDto(userId, dto);
             _logger.LogInformation("Ny CV opprettet for bruker {UserId} med CV-ID {CvId}", userId, newCv.Id);
 
-            return CreatedAtAction(nameof(MeController.GetCvForUser), new { }, newCv);
+            return Created($"/api/cvs/{newCv.Id}", newCv);
         }
         catch (Exception ex)
         {
