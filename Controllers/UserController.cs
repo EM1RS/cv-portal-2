@@ -117,7 +117,7 @@ namespace CvAPI2.Controllers
             try
             {
                 await _userService.DeleteUser(id);
-                return NoContent();
+                return Ok(new { message = $"Bruker med ID {id} er slettet." });
             }
             catch (NotFoundException ex)
             {

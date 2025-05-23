@@ -57,3 +57,24 @@ Pass på at du er i riktig mappe (CvApi2)
     Oppdatere og slette CV-er
     Oppdatere og slette Brukere
     osv osv. 
+
+
+
+    ---------------------
+
+## Docker
+
+1. docker-compose up -d 
+
+    Alle tre kontainere er oppe og kjører. 
+    api  
+    mysql 
+    nginx 
+    
+    localhost:5005/swagger 
+
+## Online
+
+Backend -   https://cvportal.sokoli.dev
+Frontend -  https://cvportal-fe.sokoli.dev
+

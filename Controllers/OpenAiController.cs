@@ -89,7 +89,7 @@ public class OpenAIController : ControllerBase
             return StatusCode(500, new ApiError { Message = "Uventet feil oppstod.", Details = ex.Message });
         }
     }
-
+    [Authorize (Roles = "Admin")]
     [HttpPost("MatrixRequirements/{cvId}")]
     public async Task<IActionResult> MatrixRequirements(string cvId, [FromBody] string requirements)
     {

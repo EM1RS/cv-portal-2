@@ -97,8 +97,6 @@ public class CvController : ControllerBase
     }
 
    
-
-
     [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateCv(string id, [FromBody] UpdateCvDto dto)
