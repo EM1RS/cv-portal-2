@@ -12,13 +12,12 @@ namespace CvAPI2.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly UserManager<User> _userManager;
+        ///private readonly UserManager<User> _userManager;
         private readonly ILogger<UsersController> _logger;
 
-        public UsersController(IUserService userService, UserManager<User> userManager, ILogger<UsersController> logger)
+        public UsersController(IUserService userService, ILogger<UsersController> logger)
         {
             _userService = userService;
-            _userManager = userManager;
             _logger = logger;
         }
 

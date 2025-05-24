@@ -18,7 +18,7 @@ public class OpenAIController : ControllerBase
         _logger = logger;
         _userManager = userManager;
     }
-
+    [Authorize(Roles = "Admin")]
     [HttpPost("summary/{cvId}")]
     public async Task<IActionResult> GenerateAndSaveSummary(string cvId)
     {
@@ -37,7 +37,7 @@ public class OpenAIController : ControllerBase
             return StatusCode(500, new ApiError { Message = "Uventet feil oppstod.", Details = ex.Message });
         }
     }
-
+    [Authorize(Roles = "Admin")]
     [HttpPost("summary/save/{cvId}")]
     public async Task<IActionResult> SaveSummary(string cvId, [FromBody] string summaryText)
     {
@@ -55,7 +55,7 @@ public class OpenAIController : ControllerBase
             return StatusCode(500, new ApiError { Message = "Uventet feil oppstod.", Details = ex.Message });
         }
     }
-
+    [Authorize(Roles = "Admin")]
     [HttpGet("summary/{cvId}")]
     public async Task<IActionResult> GetSummaryById(string cvId)
     {
@@ -74,7 +74,7 @@ public class OpenAIController : ControllerBase
             return StatusCode(500, new ApiError { Message = "Uventet feil oppstod.", Details = ex.Message });
         }
     }
-
+    [Authorize(Roles = "Admin")]
     [HttpDelete("summary/{summaryId}")]
     public async Task<IActionResult> DeleteSummary(string summaryId)
     {
