@@ -10,10 +10,13 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using QuestPDF.Infrastructure;
 using CvApi2.Service;
+using DotNetEnv;
 
 
 
 var builder = WebApplication.CreateBuilder(args);
+DotNetEnv.Env.Load();
+
 
 builder.WebHost.UseUrls("http://0.0.0.0:80");
 
@@ -63,11 +66,15 @@ builder.Services.Configure<OpenAiSettings>(options =>
 {
     builder.Configuration.GetSection("OpenAi").Bind(options);
 
-    var fromEnv = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+    var fromEnv = Environment.GetEnvironmentVariable("AZURE_OPENAI_API_KEY");
+    Console.WriteLine("🧪 OpenAI-nøkkel (kort): " + Environment.GetEnvironmentVariable("AZURE_OPENAI_API_KEY")?.Substring(0, 6));
+    Console.WriteLine("✅ Konfigurerer OpenAiSettings ...");
+
     if (!string.IsNullOrWhiteSpace(fromEnv))
     {
         options.ApiKey = fromEnv;
     }
+
 });
 
 
@@ -133,10 +140,10 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddJsonFile("appsettings.json");
 builder.Services.Configure<AwsSettings>(options =>
 {
-    options.AccessKey = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY") ?? "";
-    options.SecretKey = Environment.GetEnvironmentVariable("AWS_SECRET_KEY") ?? "";
-    options.Region = Environment.GetEnvironmentVariable("AWS_REGION") ?? "eu-north-1";
-    options.BucketName = Environment.GetEnvironmentVariable("AWS_BUCKET") ?? "";
+    options.AccessKey = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID") ?? "";
+    options.SecretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY") ?? "";
+    options.Region = Environment.GetEnvironmentVariable("AWS_REGION") ?? "";
+    options.BucketName = Environment.GetEnvironmentVariable("AWS_BUCKET_NAME") ?? "";
 });
 
 
@@ -152,8 +159,14 @@ builder.Services.AddDbContext<CvDbContext>(options =>
 {
     options.UseMySql(
         connectionString,
-        new MySqlServerVersion(new Version(8, 0, 42))
-    );
+        new MySqlServerVersion(new Version(8, 0, 42)),
+        mySqlOptions =>
+        {
+            mySqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 10,
+                maxRetryDelay: TimeSpan.FromSeconds(5),
+                errorNumbersToAdd: null);
+        });
 });
 
 

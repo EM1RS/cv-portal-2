@@ -64,6 +64,8 @@ Pass på at du er i riktig mappe (CvApi2)
 
 ## Docker
 
+## Du må være inne i riktig mappe!
+.../CvApi2/
 1. docker-compose up -d 
 
     Alle tre kontainere er oppe og kjører. 
@@ -71,7 +73,15 @@ Pass på at du er i riktig mappe (CvApi2)
     mysql 
     nginx 
     
-    localhost:5005/swagger 
+    localhost:5005/swagger - backend
+
+    
+## Du må være inne i riktig mappe!
+.../cvportal/
+1. npm run dev 
+
+    localhost:3000 - frontend
+
 
 ## Online
 

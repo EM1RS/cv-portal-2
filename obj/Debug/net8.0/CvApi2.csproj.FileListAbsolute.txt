@@ -1,11 +1,3 @@
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.csproj.AssemblyReference.cache
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.AssemblyInfoInputs.cache
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.AssemblyInfo.cs
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.csproj.CoreCompileInputs.cache
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.sourcelink.json
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\appsettings.json
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Migrations\20250517193501_InitialCreate.cs
@@ -38,6 +30,7 @@ C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\AWSSDK.Core.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\AWSSDK.Extensions.NETCore.Setup.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\AWSSDK.S3.dll
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\DotNetEnv.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Humanizer.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
@@ -64,6 +57,7 @@ C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Pomelo.EntityFrameworkCore.MySql.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\QuestPDF.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Scalar.AspNetCore.dll
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Sprache.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -156,6 +150,14 @@ C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\runtimes\win-x86\native\libstdc++-6.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\runtimes\win-x86\native\libwinpthread-1.dll
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\bin\Debug\net8.0\runtimes\win-x86\native\qpdf.dll
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.csproj.AssemblyReference.cache
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.AssemblyInfoInputs.cache
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.AssemblyInfo.cs
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.csproj.CoreCompileInputs.cache
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\CvApi2.sourcelink.json
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\eso\OneDrive - TRIMIT\Dokumenter\ES\Gokstad Akademiet\Prosjekt - Emne 9\CV_PORTAL\CvApi2\obj\Debug\net8.0\staticwebassets\msbuild.CvApi2.Microsoft.AspNetCore.StaticWebAssets.props

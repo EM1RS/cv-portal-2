@@ -9,6 +9,7 @@ public class PromptService : IPromptService
     private readonly string _openAiKey;
     private readonly ILogger<PromptService> _logger;
     private readonly ICvRepository _cvRepository;
+    private readonly HttpClient _httpClient;
 
 
     public PromptService(IOptions<OpenAiSettings> openAiSettings, ILogger<PromptService> logger, ICvRepository cvRepository)
@@ -16,6 +17,13 @@ public class PromptService : IPromptService
         _openAiKey = openAiSettings.Value.ApiKey;
         _logger = logger;
         _cvRepository = cvRepository;
+
+        _logger.LogInformation("🧪 OpenAI-nøkkel (kort): {Key}", _openAiKey?.Substring(0, 6) ?? "Mangler");
+
+        _httpClient = new HttpClient();
+        _httpClient.BaseAddress = new Uri("https://cv-openaieso.openai.azure.com/");
+        _httpClient.DefaultRequestHeaders.Add("api-key", _openAiKey);
+
     }
 
     public async Task<string> GenerateSummaryAsync(CvForAI cv)
@@ -26,14 +34,12 @@ public class PromptService : IPromptService
             Lag en profesjonell og helhetlig tekstbasert oppsummering (maks 2 avsnitt). Start alltid med kandidatens prosjekt­erfaring. 
             Utdanning og arbeidserfaring nevnes kun som støtte. Unngå punktlister. Ikke inkluder personlige opplysninger. Prosjekt datoer er viktig.
 
-
             CV-data:
             {BuildCvSummaryForAI(cv)}
             ";
 
             var requestBody = new
             {
-                model = "gpt-4-turbo",
                 messages = new[]
                 {
                     new { role = "system", content = "Du er en profesjonell karriereveileder." },
@@ -42,10 +48,10 @@ public class PromptService : IPromptService
                 temperature = 0.7
             };
 
-            using var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("api-key", _openAiKey);
-
-            var response = await client.PostAsJsonAsync("https://eso-m9r4t9se-eastus2.cognitiveservices.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview", requestBody);
+            var response = await _httpClient.PostAsJsonAsync(
+                "openai/deployments/gpt-4/chat/completions?api-version=2024-12-01-preview",
+                requestBody
+            );
 
             if (!response.IsSuccessStatusCode)
             {
@@ -69,6 +75,7 @@ public class PromptService : IPromptService
             return "Uventet feil under generering av sammendrag.";
         }
     }
+
 
     public async Task<bool> SaveSummaryToDatabaseAsync(string cvId, string summary)
     {
@@ -203,6 +210,9 @@ public class PromptService : IPromptService
         await _cvRepository.DeleteSummaryAsync(summaryId);
     }
 
+    
+
+
     public async Task<string> MatrixRequirementAsync(string cvId, string requirements)
     {
         var cv = await _cvRepository.GetCvById(cvId);
@@ -239,13 +249,11 @@ public class PromptService : IPromptService
         {requirements}
 
         CV:
-        {cvForAi.GetSummary()}
+        {BuildCvSummaryForAI(cvForAi)}
         ";
-
 
         var requestBody = new
         {
-            model = "gpt-4-turbo",
             messages = new[]
             {
                 new { role = "system", content = "Du er en profesjonell rekrutterer." },
@@ -254,10 +262,10 @@ public class PromptService : IPromptService
             temperature = 0
         };
 
-        using var client = new HttpClient();
-        client.DefaultRequestHeaders.Add("api-key", _openAiKey);
-
-        var response = await client.PostAsJsonAsync("https://eso-m9r4t9se-eastus2.cognitiveservices.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview", requestBody);
+        var response = await _httpClient.PostAsJsonAsync(
+            "openai/deployments/gpt-4/chat/completions?api-version=2024-12-01-preview",
+            requestBody
+        );
 
         if (!response.IsSuccessStatusCode)
         {
@@ -276,6 +284,7 @@ public class PromptService : IPromptService
         return evaluationResult ?? "Ukjent svar.";
     }
 
+
     private string BuildCvSummaryForAI(CvForAI cv)
     {
         var sb = new StringBuilder();
@@ -284,10 +293,9 @@ public class PromptService : IPromptService
         sb.AppendLine("🧠 Prosjekter:");
         foreach (var p in cv.ProjectExperiences ?? new List<ProjectExperienceDto>())
         {
-            var from = p.StartDate.Year.ToString();
-            var to = p.EndDate.Year.ToString();
-            var period = $"({from}–{to})";
-            sb.AppendLine($"Prosjekt: {p.ProjectName} {period}");
+            var from = p.StartDate.ToString("MM–yyyy");
+            var to = p.EndDate.ToString("MM–yyyy") ?? "nå";
+            var period = $"({from} til {to})";
 
             sb.AppendLine($"Prosjekt: {p.ProjectName} {period}");
             if (!string.IsNullOrWhiteSpace(p.Role))
@@ -303,10 +311,9 @@ public class PromptService : IPromptService
         sb.AppendLine("👔 Arbeidserfaring:");
         foreach (var w in cv.WorkExperiences ?? new List<WorkExperienceDto>())
         {
-            var from = w.From.Year.ToString() ?? "?";
-            var to = w.To?.Year.ToString() ?? "?";
-            var period = $"({from}–{to})";
-            
+            var from = w.From.ToString("MM–yyyy");
+            var to = w.To?.ToString("MM–yyyy") ?? "nå";
+            var period = $"({from} til {to})";
 
             sb.AppendLine($"Stilling: {w.Position} hos {w.CompanyName} {period}");
             if (!string.IsNullOrWhiteSpace(w.WorkExperienceDescription))
@@ -320,9 +327,9 @@ public class PromptService : IPromptService
         sb.AppendLine("🎓 Utdanning:");
         foreach (var e in cv.Educations ?? new List<EducationDto>())
         {
-            var from = e.StartYear.Year.ToString() ?? "?";
-            var to = e.EndYear.Year.ToString() ?? "?";
-            var period = $"({from}–{to})";
+            var from = e.StartYear.ToString("MM–yyyy");
+            var to = e.EndYear.ToString("MM–yyyy");
+            var period = $"({from} til {to})";
 
             sb.AppendLine($"Studium: {e.Degree} ved {e.School} {period}");
             if (!string.IsNullOrWhiteSpace(e.EducationDescription))
@@ -332,6 +339,7 @@ public class PromptService : IPromptService
 
         return sb.ToString();
     }
+
 
 
 

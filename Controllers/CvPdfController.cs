@@ -24,30 +24,17 @@ public class CvPdfController : ControllerBase
         if (cv == null)
             return NotFound("CV not found");
 
-        // Filter experiences based on selected IDs
+        // Filter experiences
         if (request.WorkExperienceIds?.Any() == true)
-        {
-            cv.WorkExperiences = cv.WorkExperiences
-                .Where(w => request.WorkExperienceIds.Contains(w.Id))
-                .ToList();
-        }
+            cv.WorkExperiences = cv.WorkExperiences.Where(w => request.WorkExperienceIds.Contains(w.Id)).ToList();
         else
-        {
             cv.WorkExperiences = new List<WorkExperience>();
-        }
 
         if (request.ProjectExperienceIds?.Any() == true)
-        {
-            cv.ProjectExperiences = cv.ProjectExperiences
-                .Where(p => request.ProjectExperienceIds.Contains(p.Id))
-                .ToList();
-        }
+            cv.ProjectExperiences = cv.ProjectExperiences.Where(p => request.ProjectExperienceIds.Contains(p.Id)).ToList();
         else
-        {
             cv.ProjectExperiences = new List<ProjectExperience>();
-        }
 
-        // Lag ny options, resten kommer som bools
         var options = new CvPdfOptions
         {
             IncludeEducations = request.IncludeEducations,
@@ -57,16 +44,41 @@ public class CvPdfController : ControllerBase
             IncludeCertifications = request.IncludeCertifications,
             IncludeCompetenceOverviews = request.IncludeCompetenceOverviews,
             IncludeAwards = request.IncludeAwards,
-
-            // Disse sender vi med som tom liste (vi har allerede filtrert over)
             WorkExperienceIds = request.WorkExperienceIds,
             ProjectExperienceIds = request.ProjectExperienceIds
         };
 
-        var document = new CvPdfDocument(cv, options);
+        // Hent bilde fra URL
+       byte[]? imageBytes = null;
+        if (!string.IsNullOrWhiteSpace(cv.ProfileImageUrl))
+        {
+            using var client = new HttpClient();
+            try
+            {
+                imageBytes = await client.GetByteArrayAsync(cv.ProfileImageUrl);
+                 if (imageBytes != null && imageBytes.Length < 100)
+                   {
+                    imageBytes = null; // Dropper "feil" bilde hvis det ble returnert for lite
+                   }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Klarte ikke hente bilde: " + ex.Message);
+            }
+        }
+
+        var document = new CvPdfDocument(cv, options, imageBytes); // ✅ Nå med bilde
+
+        if (imageBytes == null)
+        {
+            Console.WriteLine($"⚠️  Ingen bilde funnet for CV {cvId}: {cv.ProfileImageUrl}");
+        }
+
         var pdfBytes = document.GeneratePdf();
+
 
         return File(pdfBytes, "application/pdf", $"CV_{cv.User?.FullName ?? "user"}.pdf");
     }
+
 
 }

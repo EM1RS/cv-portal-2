@@ -14,12 +14,15 @@ namespace CvApi2.Service
         public S3Service(IOptions<AwsSettings> options)
         {
             var settings = options.Value;
-
             _bucket = settings.BucketName;
+
+            var regionEndpoint = settings.Region == "us-east-1"
+                ? RegionEndpoint.USEast1
+                : RegionEndpoint.GetBySystemName(settings.Region);
 
             var config = new AmazonS3Config
             {
-                RegionEndpoint = RegionEndpoint.GetBySystemName(settings.Region)
+                RegionEndpoint = regionEndpoint
             };
 
             _s3Client = new AmazonS3Client(settings.AccessKey, settings.SecretKey, config);
